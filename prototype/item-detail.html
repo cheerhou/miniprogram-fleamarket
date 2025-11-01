@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品详情</title>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: "#0052D9",
+              brandlight: "#3385FF",
+              graybg: "#F5F7FA",
+              success: "#2BA471",
+              warning: "#ED7B2F",
+              danger: "#E34D59",
+            },
+            fontFamily: {
+              display: ['"SF Pro Display"', "system-ui", "sans-serif"],
+              body: ['"SF Pro Text"', "system-ui", "sans-serif"],
+            },
+            boxShadow: {
+              card: "0 12px 32px rgba(0, 82, 217, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://tdesign.gtimg.com/icon/0.0.4/fonts/index.css"
+    />
+    <style>
+      body {
+        font-family: "SF Pro Text", system-ui, sans-serif;
+        background: radial-gradient(circle at top, #ecf3ff 0%, #f7f9fc 60%, #eef1f7 100%);
+      }
+    </style>
+  </head>
+  <body class="h-full flex items-center justify-center py-10">
+    <div
+      class="w-[390px] h-[844px] bg-white rounded-[40px] shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
+    >
+      <header class="h-16 bg-white flex items-center justify-between px-6">
+        <a href="index.html" class="text-slate-500 text-xl">
+          <i class="t-icon t-icon-chevron-left"></i>
+        </a>
+        <div class="text-sm font-medium">小米音箱 Pro</div>
+        <div class="flex gap-4 text-xl text-slate-400">
+          <i class="t-icon t-icon-share"></i>
+          <i class="t-icon t-icon-more"></i>
+        </div>
+      </header>
+
+      <main class="flex-1 bg-graybg px-0 pb-24 overflow-y-auto">
+        <section class="relative">
+          <div class="w-full h-64 bg-brand/10 flex items-center justify-center">
+            <div class="text-center text-brand">
+              <i class="t-icon t-icon-speaker text-5xl"></i>
+              <p class="mt-2 text-sm">小米音箱 Pro</p>
+            </div>
+          </div>
+          <div class="absolute top-4 right-4">
+            <button class="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center text-brand">
+              <i class="t-icon t-icon-heart"></i>
+            </button>
+          </div>
+        </section>
+
+        <section class="px-6 py-5 bg-white rounded-t-3xl -mt-6 space-y-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-xs text-success">
+                <i class="t-icon t-icon-check-circle"></i>
+                正在锁定中 · 剩余 5 小时 12 分
+              </div>
+              <h1 class="text-2xl font-semibold mt-2">¥128</h1>
+              <p class="text-sm text-slate-500 mt-1">
+                支持到付与线下自提 · 9 成新 · 附带原装电源
+              </p>
+            </div>
+            <div class="flex flex-col items-end text-right text-xs text-slate-500">
+              <span>发布于 2024-05-19</span>
+              <span>北区 3 栋大厅</span>
+              <span class="text-brand">同小区可见</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3 text-xs text-slate-500">
+            <span class="px-3 py-1 rounded-full bg-brand/5 text-brand">智能设备</span>
+            <span class="px-3 py-1 rounded-full bg-slate-100">支持微信支付</span>
+            <span class="px-3 py-1 rounded-full bg-slate-100">可预约试音</span>
+          </div>
+
+          <div class="bg-graybg rounded-2xl p-4 space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand">
+                <i class="t-icon t-icon-user"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium">徐小米</span>
+                  <span class="text-xs text-brand">已完成 12 笔交易</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">北区 · 业主认证 · 当日响应</p>
+              </div>
+              <button class="px-3 py-1.5 text-xs bg-white rounded-full shadow">
+                <i class="t-icon t-icon-chat"></i>
+                私信
+              </button>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-600">
+              <div class="flex items-center gap-2">
+                <i class="t-icon t-icon-timer text-brand"></i>
+                当前锁定人：王同学（尾号 5621）
+              </div>
+              <a href="locks.html" class="text-brand">锁定记录</a>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h2 class="text-base font-semibold">物品描述</h2>
+            <p class="text-sm leading-relaxed text-slate-600">
+              自用小米音箱 Pro，一直放在客厅，音质很好，支持小爱同学语音控制，可连接蓝牙、Wi-Fi。机身无刮痕，出货前会进行清洁并附赠备用电源线。
+            </p>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="h-24 rounded-2xl bg-brand/10 flex items-center justify-center text-brand text-sm">
+                正面
+              </div>
+              <div class="h-24 rounded-2xl bg-brand/10 flex items-center justify-center text-brand text-sm">
+                顶部
+              </div>
+              <div class="h-24 rounded-2xl bg-brand/10 flex items-center justify-center text-brand text-sm">
+                配件
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h2 class="text-base font-semibold">锁定与支付</h2>
+            <div class="bg-graybg rounded-2xl p-4 space-y-4 text-sm text-slate-600">
+              <div class="flex items-center gap-3">
+                <i class="t-icon t-icon-creditcard text-brand"></i>
+                支持微信支付 · 付款后 24 小时内完成线下交付
+              </div>
+              <div class="flex items-start gap-3">
+                <i class="t-icon t-icon-calendar text-brand"></i>
+                <div>
+                  当前锁定截至：<span class="text-slate-900">05-19 22:30</span><br />
+                  锁定超时将自动释放，系统会推送通知给关注用户
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <i class="t-icon t-icon-secure text-brand"></i>
+                <div>
+                  支持售后争议仲裁，管理员可协助退款、对账等异常处理
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-semibold">订阅提醒</h2>
+              <label class="inline-flex items-center gap-2 text-xs text-brand">
+                <input type="checkbox" checked class="accent-brand" />
+                关注此物品
+              </label>
+            </div>
+            <div class="bg-graybg rounded-2xl p-4 space-y-3 text-xs text-slate-600">
+              <div class="flex items-center gap-2">
+                <i class="t-icon t-icon-notification text-brand"></i>
+                锁定释放时提醒
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="t-icon t-icon-check-circle text-brand"></i>
+                售出后提醒 & 关注类似商品
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-base font-semibold">留言交流</h2>
+              <a href="messages.html" class="text-xs text-brand">全部</a>
+            </div>
+            <div class="space-y-3 text-sm text-slate-600">
+              <div class="bg-graybg rounded-2xl p-3">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>王同学 · 买家</span>
+                  <span>今天 10:45</span>
+                </div>
+                <p class="mt-2 text-slate-700">
+                  周末可约看货吗？想确认一下音质表现。
+                </p>
+                <div class="mt-2 text-xs text-brand">卖家回复：下午 3 点后都在家。</div>
+              </div>
+              <div class="bg-graybg rounded-2xl p-3">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>小区管家</span>
+                  <span>昨天 21:12</span>
+                </div>
+                <p class="mt-2 text-slate-700">交易完成后，请记得在订单中确认收货。</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <input
+                type="text"
+                placeholder="留言提问..."
+                class="flex-1 px-4 py-3 text-sm bg-graybg rounded-full focus:outline-none"
+              />
+              <button class="px-4 py-2 text-sm bg-brand text-white rounded-full">
+                发送
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="h-24 bg-white border-t border-slate-100 px-6 py-4">
+        <div class="flex items-center justify-between mb-2 text-xs text-slate-500">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-success/10 text-success">
+              支持微信支付
+            </span>
+            <span class="px-3 py-1 rounded-full bg-brand/10 text-brand">
+              锁定保护
+            </span>
+          </div>
+          <a href="subscriptions.html" class="text-brand">订阅设置</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="w-16 h-16 rounded-3xl bg-graybg text-brand flex flex-col items-center justify-center text-xs">
+            <i class="t-icon t-icon-customer-service text-lg"></i>
+            客服
+          </button>
+          <button class="flex-1 h-16 rounded-3xl bg-white border border-brand text-brand text-base font-semibold">
+            <i class="t-icon t-icon-chat"></i>
+            联系卖家
+          </button>
+          <button class="flex-1 h-16 rounded-3xl bg-brand text-white text-base font-semibold">
+            锁定并支付
+          </button>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

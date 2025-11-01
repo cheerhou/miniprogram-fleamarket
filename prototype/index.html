@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>社区二手市场 - 首页</title>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: "#0052D9",
+              brandlight: "#3385FF",
+              graybg: "#F5F7FA",
+              success: "#2BA471",
+              warning: "#ED7B2F",
+              danger: "#E34D59",
+            },
+            fontFamily: {
+              display: ['"SF Pro Display"', "system-ui", "sans-serif"],
+              body: ['"SF Pro Text"', "system-ui", "sans-serif"],
+            },
+            boxShadow: {
+              card: "0 12px 32px rgba(0, 82, 217, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://tdesign.gtimg.com/icon/0.0.4/fonts/index.css"
+    />
+    <style>
+      body {
+        font-family: "SF Pro Text", system-ui, sans-serif;
+        background: radial-gradient(circle at top, #ecf3ff 0%, #f7f9fc 60%, #eef1f7 100%);
+      }
+      .status-bar::before {
+        content: "";
+        position: absolute;
+        top: 18px;
+        left: 24px;
+        width: 40px;
+        height: 16px;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+      }
+    </style>
+  </head>
+  <body class="h-full flex items-center justify-center py-10">
+    <div
+      class="w-[390px] h-[844px] bg-white rounded-[40px] shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
+    >
+      <header class="relative status-bar h-16 bg-brand text-white">
+        <div class="h-full flex items-center justify-between px-6">
+          <div class="flex items-center gap-2">
+            <i class="t-icon t-icon-location text-xl"></i>
+            <span class="text-sm">碧桂园 · 逸翠湾</span>
+            <span class="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+              已认证
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <i class="t-icon t-icon-notification text-xl"></i>
+            <div
+              class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
+            >
+              <span class="text-sm">我</span>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 pb-4 relative">
+          <div class="absolute inset-x-0 bottom-0 translate-y-1/2">
+            <div
+              class="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 shadow-lg"
+            >
+              <i class="t-icon t-icon-search text-brand text-lg"></i>
+              <input
+                type="text"
+                placeholder="搜索心仪的闲置宝贝"
+                class="flex-1 text-sm focus:outline-none"
+              />
+              <button
+                class="px-4 py-1.5 text-xs bg-brand text-white rounded-full"
+              >
+                搜索
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 bg-graybg px-6 pt-14 pb-24 overflow-y-auto">
+        <section class="mb-6">
+          <div
+            class="bg-gradient-to-r from-brand to-brandlight rounded-3xl text-white p-5 shadow-card"
+          >
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-xs uppercase tracking-wide opacity-80">
+                  社区优选
+                </p>
+                <h1 class="text-2xl font-semibold mt-1">今日精选好物</h1>
+                <p class="text-sm text-white/80 mt-2">
+                  关注喜欢的宝贝，锁定后即可预约交易
+                </p>
+              </div>
+              <div
+                class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center"
+              >
+                <i class="t-icon t-icon-heart text-2xl"></i>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-6 text-xs">
+              <span class="bg-white/20 px-3 py-1 rounded-full">
+                本小区可见
+              </span>
+              <span class="bg-white/20 px-3 py-1 rounded-full">
+                微信支付保障
+              </span>
+              <span class="bg-white/20 px-3 py-1 rounded-full">
+                锁定最长 12 小时
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-6">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-base font-semibold">分类速览</h2>
+            <a href="publish.html" class="text-xs text-brand">发布闲置</a>
+          </div>
+          <div class="grid grid-cols-4 gap-3 text-center text-xs">
+            <a
+              href="#"
+              class="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 shadow-sm"
+            >
+              <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                <i class="t-icon t-icon-gift text-brand text-lg"></i>
+              </div>
+              童趣
+            </a>
+            <a
+              href="#"
+              class="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 shadow-sm"
+            >
+              <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                <i class="t-icon t-icon-mobile text-brand text-lg"></i>
+              </div>
+              数码
+            </a>
+            <a
+              href="#"
+              class="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 shadow-sm"
+            >
+              <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                <i class="t-icon t-icon-palette text-brand text-lg"></i>
+              </div>
+              手作
+            </a>
+            <a
+              href="#"
+              class="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 shadow-sm"
+            >
+              <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center">
+                <i class="t-icon t-icon-home text-brand text-lg"></i>
+              </div>
+              家居
+            </a>
+          </div>
+        </section>
+
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-base font-semibold">最新上架</h2>
+            <a href="notifications.html" class="text-xs text-brand">订阅提醒</a>
+          </div>
+          <div class="space-y-4">
+            <a
+              href="item-detail.html"
+              class="flex gap-4 bg-white rounded-3xl p-4 shadow-sm hover:shadow-card transition-shadow"
+            >
+              <div
+                class="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand/10 to-brandlight/10 flex items-center justify-center text-brand"
+              >
+                <span class="text-sm">智能音箱</span>
+              </div>
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold">小米音箱 Pro</h3>
+                    <span class="text-xs text-success bg-success/10 px-2 py-0.5 rounded-full">
+                      9 成新
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">
+                    自提 · 北区 3 栋大厅 · 赠送配件
+                  </p>
+                </div>
+                <div class="flex items-center justify-between mt-3">
+                  <div class="text-lg font-semibold text-brand">¥128</div>
+                  <div class="flex items-center gap-2 text-xs text-slate-500">
+                    <i class="t-icon t-icon-view-module text-base"></i>
+                    12 人关注
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-3">
+                  <div class="flex items-center gap-2 text-xs text-brand">
+                    <i class="t-icon t-icon-timer text-sm"></i>
+                    锁定余 5 小时
+                  </div>
+                  <button
+                    class="px-4 py-1.5 text-xs bg-brand text-white rounded-full shadow"
+                  >
+                    去锁定
+                  </button>
+                </div>
+              </div>
+            </a>
+
+            <div class="flex gap-4 bg-white rounded-3xl p-4 shadow-sm">
+              <div
+                class="w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center text-success"
+              >
+                <span class="text-sm">空气炸锅</span>
+              </div>
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold">美的空气炸锅</h3>
+                    <span class="text-xs text-warning bg-warning/10 px-2 py-0.5 rounded-full">
+                      已被锁定
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">
+                    B 区 8 栋 1 单元 · 到期 18:00
+                  </p>
+                </div>
+                <div class="flex items-center justify-between mt-3">
+                  <div class="text-lg font-semibold text-brand">¥198</div>
+                  <div class="flex items-center gap-2 text-xs text-slate-500">
+                    <i class="t-icon t-icon-view-column text-base"></i>
+                    5 次锁定
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-3 text-xs">
+                  <div class="flex items-center gap-2 text-success">
+                    <i class="t-icon t-icon-check-circle text-sm"></i>
+                    等待买家支付
+                  </div>
+                  <button class="px-4 py-1.5 text-xs bg-slate-100 rounded-full">
+                    关注
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-4 bg-white rounded-3xl p-4 shadow-sm">
+              <div
+                class="w-24 h-24 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center text-danger"
+              >
+                <span class="text-sm">滑板车</span>
+              </div>
+              <div class="flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold">Ninebot 儿童滑板车</h3>
+                    <span class="text-xs text-danger bg-danger/10 px-2 py-0.5 rounded-full">
+                      已售出
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">成交 · 线下自提</p>
+                </div>
+                <div class="flex items-center justify-between mt-3">
+                  <div class="text-lg font-semibold text-slate-500 line-through">
+                    ¥299
+                  </div>
+                  <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <i class="t-icon t-icon-time text-base"></i>
+                    3 小时售出
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-3 text-xs">
+                  <div class="flex items-center gap-2 text-brand">
+                    <i class="t-icon t-icon-chat text-sm"></i>
+                    4 条留言
+                  </div>
+                  <a href="item-detail.html" class="text-brand">查看详情</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-base font-semibold">订阅提醒</h2>
+            <a href="notifications.html" class="text-xs text-brand">管理</a>
+          </div>
+          <div class="bg-white rounded-3xl p-4 space-y-3 text-xs text-slate-600">
+            <div class="flex items-start gap-3">
+              <i class="t-icon t-icon-mail text-brand text-lg"></i>
+              <div class="flex-1">
+                <p class="font-medium text-slate-900">滑板车到货提醒</p>
+                <p class="mt-1">
+                  已为你锁定通知权限，库存更新后第一时间推送
+                </p>
+              </div>
+              <label class="inline-flex items-center gap-2 text-xs text-brand">
+                <input type="checkbox" checked class="accent-brand" />
+                订阅中
+              </label>
+            </div>
+            <div class="flex items-start gap-3">
+              <i class="t-icon t-icon-bulb text-brand text-lg"></i>
+              <div class="flex-1">
+                <p class="font-medium text-slate-900">链家小家电专题</p>
+                <p class="mt-1">每周精选小家电限时优惠速递</p>
+              </div>
+              <a href="notifications.html" class="text-brand">编辑</a>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-base font-semibold">社区公告</h2>
+            <span class="text-xs text-slate-400">2024-05-18</span>
+          </div>
+          <div class="bg-white rounded-3xl p-4 text-xs text-slate-600 space-y-3">
+            <div class="flex items-center gap-3">
+              <i class="t-icon t-icon-announcement text-brand text-lg"></i>
+              <div>
+                <p class="font-medium text-slate-900">物业温馨提示</p>
+                <p class="mt-1">请文明交易，线下交付时佩戴门禁识别。</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="t-icon t-icon-time text-brand text-lg"></i>
+              <div>
+                <p class="font-medium text-slate-900">锁定时长调整</p>
+                <p class="mt-1">6 月 1 日起默认锁定时长 12 小时。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer
+        class="relative h-20 bg-white border-t border-slate-100 flex items-center justify-around px-6 text-xs text-slate-500"
+      >
+        <a href="index.html" class="flex flex-col items-center gap-1 text-brand">
+          <i class="t-icon t-icon-home text-xl"></i>
+          首页
+        </a>
+        <a href="locks.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-view-gallery text-xl"></i>
+          锁定
+        </a>
+        <div class="absolute -top-6 left-1/2 -translate-x-1/2">
+          <a
+            href="publish.html"
+            class="w-16 h-16 rounded-full bg-brand text-white flex flex-col items-center justify-center shadow-lg"
+          >
+            <i class="t-icon t-icon-plus text-2xl"></i>
+            发布
+          </a>
+        </div>
+        <a href="my.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-user text-xl"></i>
+          我的
+        </a>
+        <a href="admin.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-data text-xl"></i>
+          管理
+        </a>
+      </footer>
+    </div>
+  </body>
+</html>

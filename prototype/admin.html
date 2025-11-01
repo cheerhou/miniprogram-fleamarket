@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理员运营</title>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: "#0052D9",
+              brandlight: "#3385FF",
+              graybg: "#F5F7FA",
+              success: "#2BA471",
+              warning: "#ED7B2F",
+              danger: "#E34D59",
+            },
+            fontFamily: {
+              display: ['"SF Pro Display"', "system-ui", "sans-serif"],
+              body: ['"SF Pro Text"', "system-ui", "sans-serif"],
+            },
+            boxShadow: {
+              card: "0 12px 32px rgba(0, 82, 217, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://tdesign.gtimg.com/icon/0.0.4/fonts/index.css"
+    />
+    <style>
+      body {
+        font-family: "SF Pro Text", system-ui, sans-serif;
+        background: radial-gradient(circle at top, #ecf3ff 0%, #f7f9fc 60%, #eef1f7 100%);
+      }
+    </style>
+  </head>
+  <body class="h-full flex items-center justify-center py-10">
+    <div
+      class="w-[390px] h-[844px] bg-white rounded-[40px] shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
+    >
+      <header class="h-16 bg-white flex items-center justify-between px-6 border-b border-slate-100">
+        <a href="index.html" class="text-slate-500 text-xl">
+          <i class="t-icon t-icon-chevron-left"></i>
+        </a>
+        <div class="text-sm font-medium">管理员运营台</div>
+        <button class="px-3 py-1.5 rounded-2xl bg-brand text-white text-xs">
+          切换身份
+        </button>
+      </header>
+
+      <main class="flex-1 bg-graybg px-6 pb-24 overflow-y-auto space-y-6">
+        <section class="pt-6">
+          <div class="bg-gradient-to-r from-brand to-brandlight rounded-3xl p-5 text-white shadow-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs text-white/70">本周概览</p>
+                <h1 class="text-2xl font-semibold mt-1">社区交易健康指数 92</h1>
+                <p class="text-sm text-white/80 mt-3">
+                  锁定转化率 68%，支付完成率 94%，暂无严重违规。
+                </p>
+              </div>
+              <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center">
+                <i class="t-icon t-icon-chart text-2xl"></i>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-5 text-xs">
+              <span class="bg-white/20 px-3 py-1 rounded-full">锁定异常 -23%</span>
+              <span class="bg-white/20 px-3 py-1 rounded-full">退款单 2 笔</span>
+              <span class="bg-white/20 px-3 py-1 rounded-full">消息送达率 98%</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold">实时数据面板</h2>
+            <button class="text-xs text-brand">导出</button>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-xs text-slate-600">
+            <div class="bg-white rounded-3xl p-4 space-y-2 shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">今日新增</span>
+                <i class="t-icon t-icon-activity text-brand"></i>
+              </div>
+              <div class="text-2xl font-semibold text-slate-900">38</div>
+              <p>新发布商品</p>
+            </div>
+            <div class="bg-white rounded-3xl p-4 space-y-2 shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">锁定成功率</span>
+                <i class="t-icon t-icon-lock-on text-brand"></i>
+              </div>
+              <div class="text-2xl font-semibold text-slate-900">72%</div>
+              <p>较昨日 +6%</p>
+            </div>
+            <div class="bg-white rounded-3xl p-4 space-y-2 shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">支付成功</span>
+                <i class="t-icon t-icon-creditcard text-brand"></i>
+              </div>
+              <div class="text-2xl font-semibold text-slate-900">¥12,860</div>
+              <p>对账状态：正常</p>
+            </div>
+            <div class="bg-white rounded-3xl p-4 space-y-2 shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-400">用户增长</span>
+                <i class="t-icon t-icon-usergroup text-brand"></i>
+              </div>
+              <div class="text-2xl font-semibold text-slate-900">+86</div>
+              <p>新认证住户</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-3xl p-5 shadow-sm space-y-4 text-xs text-slate-600">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-900">锁定异常处理</h2>
+            <a href="locks.html" class="text-brand">查看全部</a>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-slate-900">订单 #20240519023</p>
+                <p class="mt-1">买家 叶女士 · 卖家 徐小米</p>
+                <p class="mt-1 text-warning">锁定超过 24 小时未支付</p>
+              </div>
+              <div class="flex flex-col gap-2 text-xs">
+                <button class="px-3 py-1 rounded-full bg-brand/10 text-brand">
+                  提醒支付
+                </button>
+                <button class="px-3 py-1 rounded-full bg-graybg">
+                  强制释放
+                </button>
+              </div>
+            </div>
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-slate-900">订单 #20240519018</p>
+                <p class="mt-1">用户申请退款 · 质保期内</p>
+                <p class="mt-1 text-danger">等待商家确认转账</p>
+              </div>
+              <div class="flex flex-col gap-2 text-xs">
+                <button class="px-3 py-1 rounded-full bg-danger text-white">
+                  升级仲裁
+                </button>
+                <button class="px-3 py-1 rounded-full bg-graybg">
+                  查看详情
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 bg-graybg rounded-2xl p-3 text-slate-500">
+            <i class="t-icon t-icon-calendar text-brand"></i>
+            定时任务：每日 08:00 检查过期锁定并自动释放
+          </div>
+        </section>
+
+        <section class="bg-white rounded-3xl p-5 shadow-sm space-y-4 text-xs text-slate-600">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-900">支付对账</h2>
+            <button class="text-brand">对账工具</button>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-900">昨日营收 ¥6,380</p>
+                <p class="text-slate-400 mt-1">已对账 100%，未结算 0</p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-success/10 text-success">
+                正常
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-900">退款审核</p>
+                <p class="text-slate-400 mt-1">待处理：2 · 已完成：5</p>
+              </div>
+              <button class="px-3 py-1 rounded-full bg-warning/10 text-warning">
+                立即处理
+              </button>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-900">对账日志</p>
+                <p class="text-slate-400 mt-1">最近更新：今日 09:30</p>
+              </div>
+              <a href="reports.html" class="text-brand">查看日志</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-3xl p-5 shadow-sm space-y-4 text-xs text-slate-600">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-900">消息模板管理</h2>
+            <a href="notifications.html" class="text-brand">配置</a>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-900">锁定成功通知</p>
+                <p class="text-slate-400 mt-1">模板 ID：TMP128530 · 跟进：张敏</p>
+              </div>
+              <label class="inline-flex items-center gap-2 text-brand">
+                <input type="checkbox" checked class="accent-brand" />
+                启用
+              </label>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-900">释放提醒</p>
+                <p class="text-slate-400 mt-1">模板 ID：TMP87302 · 待提交审核</p>
+              </div>
+              <button class="px-3 py-1 rounded-full bg-warning/10 text-warning">
+                提交审核
+              </button>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-900">售出感谢</p>
+                <p class="text-slate-400 mt-1">模板 ID：TMP90833 · 审核通过</p>
+              </div>
+              <button class="px-3 py-1 rounded-full bg-graybg">
+                编辑文案
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-3xl p-5 shadow-sm space-y-4 text-xs text-slate-600">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-900">社区公告安排</h2>
+            <button class="text-brand">新建公告</button>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-slate-900">本周精选专题</p>
+                <p class="text-slate-400 mt-1">发布于 05-18 · 面向所有用户</p>
+              </div>
+              <button class="px-3 py-1 rounded-full bg-brand/10 text-brand">
+                置顶
+              </button>
+            </div>
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-sm text-slate-900">线下交付提醒</p>
+                <p class="text-slate-400 mt-1">发布于 05-17 · 管理员：李青</p>
+              </div>
+              <button class="px-3 py-1 rounded-full bg-graybg">
+                编辑
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="h-20 bg-white border-t border-slate-100 flex items-center justify-around px-6 text-xs text-slate-500">
+        <a href="index.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-home text-xl"></i>
+          首页
+        </a>
+        <a href="locks.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-view-gallery text-xl"></i>
+          锁定
+        </a>
+        <a href="publish.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-add text-xl"></i>
+          发布
+        </a>
+        <a href="my.html" class="flex flex-col items-center gap-1">
+          <i class="t-icon t-icon-user text-xl"></i>
+          我的
+        </a>
+        <a href="admin.html" class="flex flex-col items-center gap-1 text-brand">
+          <i class="t-icon t-icon-data text-xl"></i>
+          管理
+        </a>
+      </footer>
+    </div>
+  </body>
+</html>
