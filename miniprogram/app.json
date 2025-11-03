@@ -4,6 +4,7 @@
     "pages/locks/locks",
     "pages/publish/publish",
     "pages/my/my",
+    "pages/detail/detail",
     "pages/logs/logs"
   ],
   "window": {

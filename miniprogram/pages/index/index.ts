@@ -134,9 +134,8 @@ Page({
   onItemTap(e: any) {
     const { id } = e.currentTarget.dataset
     console.log('点击物品:', id)
-    wx.showToast({
-      title: '物品详情页开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: `/pages/detail/detail?id=${id}`
     })
   },
 

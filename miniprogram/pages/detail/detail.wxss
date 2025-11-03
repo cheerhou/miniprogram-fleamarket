@@ -1,0 +1,461 @@
+.detail-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding-bottom: 160rpx;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.content-container {
+  background: #f5f7fa;
+}
+
+/* 图片轮播 */
+.image-section {
+  position: relative;
+  width: 100%;
+  height: 500rpx;
+  background: #ffffff;
+}
+
+.image-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-image {
+  width: 100%;
+  height: 100%;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 32rpx;
+  right: 32rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.image-indicator {
+  position: absolute;
+  bottom: 32rpx;
+  right: 32rpx;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+/* 物品信息 */
+.info-section {
+  background: #ffffff;
+  margin: 16rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.status-tags {
+  margin-bottom: 24rpx;
+}
+
+.status-tag {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+.status-tag.locked {
+  background: #fff3e6;
+  color: #ed7b2f;
+}
+
+.status-tag.sold {
+  background: #f0f9f0;
+  color: #2ba471;
+}
+
+.status-tag.available {
+  background: #e6f7ff;
+  color: #0052d9;
+}
+
+.price-info {
+  margin-bottom: 24rpx;
+}
+
+.price {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #e34d59;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.meta-info {
+  display: flex;
+  gap: 24rpx;
+  font-size: 24rpx;
+  color: #86909c;
+}
+
+.condition {
+  position: relative;
+  padding-left: 20rpx;
+}
+
+.condition::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8rpx;
+  height: 8rpx;
+  background: #86909c;
+  border-radius: 50%;
+}
+
+.location {
+  position: relative;
+  padding-left: 20rpx;
+}
+
+.location::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8rpx;
+  height: 8rpx;
+  background: #86909c;
+  border-radius: 50%;
+}
+
+.title-section {
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1d2129;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.description {
+  font-size: 28rpx;
+  color: #4e5969;
+  line-height: 1.6;
+}
+
+.category-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.category-tag {
+  padding: 8rpx 16rpx;
+  background: #e6f7ff;
+  color: #0052d9;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+.tag {
+  padding: 8rpx 16rpx;
+  background: #f0f2f5;
+  color: #4e5969;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+/* 卖家信息 */
+.seller-section {
+  background: #ffffff;
+  margin: 16rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.seller-info {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.seller-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: #f0f2f5;
+}
+
+.seller-details {
+  flex: 1;
+}
+
+.seller-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1d2129;
+  margin-bottom: 8rpx;
+}
+
+.seller-meta {
+  display: flex;
+  gap: 16rpx;
+  font-size: 24rpx;
+}
+
+.seller-badge {
+  color: #0052d9;
+  background: #e6f7ff;
+  padding: 4rpx 8rpx;
+  border-radius: 8rpx;
+}
+
+.seller-response {
+  color: #2ba471;
+  background: #f0f9f0;
+  padding: 4rpx 8rpx;
+  border-radius: 8rpx;
+}
+
+.contact-btn {
+  min-width: 120rpx;
+}
+
+.lock-info {
+  background: #f5f7fa;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.lock-user,
+.lock-time {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #4e5969;
+}
+
+/* 锁定与支付信息 */
+.payment-section {
+  background: #ffffff;
+  margin: 16rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1d2129;
+  margin-bottom: 24rpx;
+}
+
+.payment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.payment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #4e5969;
+  line-height: 1.6;
+}
+
+/* 订阅提醒 */
+.subscription-section {
+  background: #ffffff;
+  margin: 16rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.subscription-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.subscription-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #4e5969;
+}
+
+/* 留言交流 */
+.comments-section {
+  background: #ffffff;
+  margin: 16rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.view-all {
+  font-size: 24rpx;
+  color: #0052d9;
+}
+
+.comments-list {
+  margin-bottom: 32rpx;
+}
+
+.comment-item {
+  margin-bottom: 24rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 2rpx solid #f0f2f5;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.comment-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: #f0f2f5;
+}
+
+.comment-meta {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.comment-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1d2129;
+}
+
+.comment-badge {
+  font-size: 20rpx;
+  color: #0052d9;
+  background: #e6f7ff;
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+}
+
+.comment-time {
+  font-size: 22rpx;
+  color: #86909c;
+  margin-left: auto;
+}
+
+.comment-content {
+  font-size: 26rpx;
+  color: #4e5969;
+  line-height: 1.6;
+  margin-left: 76rpx;
+}
+
+.comment-input {
+  display: flex;
+  gap: 16rpx;
+  align-items: center;
+}
+
+.input-field {
+  flex: 1;
+}
+
+.send-btn {
+  min-width: 120rpx;
+}
+
+/* 底部占位 */
+.bottom-spacer {
+  height: 40rpx;
+}
+
+/* 底部操作栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 16rpx;
+}
+
+.contact-btn {
+  min-width: 200rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lock-btn {
+  flex: 1;
+}
+
+/* TDesign 组件样式覆盖 */
+.t-swiper {
+  border-radius: 16rpx;
+}
+
+.t-button {
+  border-radius: 32rpx;
+}
+
+.t-input {
+  border-radius: 32rpx;
+}
