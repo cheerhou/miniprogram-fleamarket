@@ -1,28 +1,247 @@
 <!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="navbar-content">
+      <view class="location-info">
+        <t-icon name="location" size="20px" color="#fff" />
+        <text class="location-text">{{community}}</text>
+        <t-tag theme="primary" variant="light" size="small">已认证</t-tag>
+      </view>
+      <view class="navbar-actions">
+        <t-icon name="notification" size="20px" color="#fff" bind:tap="onNotification" />
+        <view class="avatar-wrapper" bind:tap="onProfile">
+          <text class="avatar-text">我</text>
         </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+      </view>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    
+    <!-- 搜索框 -->
+    <view class="search-wrapper">
+      <view class="search-box">
+        <t-icon name="search" size="18px" color="#0052D9" />
+        <input 
+          class="search-input" 
+          placeholder="搜索心仪的闲置宝贝"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+        />
+        <t-button 
+          theme="primary" 
+          size="small" 
+          bind:tap="onSearch"
+          class="search-btn"
+        >
+          搜索
+        </t-button>
+      </view>
     </view>
-    <t-button theme="primary">按钮</t-button>
   </view>
-</scroll-view>
+
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 精选横幅 -->
+    <view class="featured-banner">
+      <view class="banner-content">
+        <view class="banner-left">
+          <text class="banner-subtitle">社区优选</text>
+          <text class="banner-title">今日精选好物</text>
+          <text class="banner-desc">关注喜欢的宝贝，锁定后即可预约交易</text>
+        </view>
+        <view class="banner-icon">
+          <t-icon name="heart" size="32px" color="#fff" />
+        </view>
+      </view>
+      <view class="banner-tags">
+        <view class="banner-tag">本小区可见</view>
+        <view class="banner-tag">微信支付保障</view>
+        <view class="banner-tag">锁定最长 12 小时</view>
+      </view>
+    </view>
+
+    <!-- 分类速览 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">分类速览</text>
+        <text class="section-link" bind:tap="onPublish">发布闲置</text>
+      </view>
+      <view class="category-grid">
+        <view 
+          class="category-item" 
+          wx:for="{{categories}}" 
+          wx:key="id"
+          bind:tap="onCategoryTap"
+          data-id="{{item.id}}"
+        >
+          <view class="category-icon">
+            <t-icon name="{{item.icon}}" size="20px" color="#0052D9" />
+          </view>
+          <text class="category-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最新上架 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">最新上架</text>
+        <text class="section-link" bind:tap="onSubscribe">订阅提醒</text>
+      </view>
+      <view class="item-list">
+        <view 
+          class="item-card" 
+          wx:for="{{items}}" 
+          wx:key="id"
+          bind:tap="onItemTap"
+          data-id="{{item.id}}"
+        >
+          <view class="item-image {{item.status === 'sold' ? 'item-image-sold' : ''}}">
+            <text class="item-image-text">{{item.imageText}}</text>
+          </view>
+          <view class="item-info">
+            <view class="item-header">
+              <text class="item-title">{{item.title}}</text>
+              <t-tag 
+                theme="{{item.statusTheme}}" 
+                variant="light" 
+                size="small"
+              >
+                {{item.statusText}}
+              </t-tag>
+            </view>
+            <text class="item-desc">{{item.description}}</text>
+            
+            <view class="item-price-row">
+              <text class="item-price {{item.status === 'sold' ? 'item-price-sold' : ''}}">¥{{item.price}}</text>
+              <view class="item-stats">
+                <t-icon name="browse" size="14px" color="#94a3b8" />
+                <text class="item-stats-text">{{item.views}} 人关注</text>
+              </view>
+            </view>
+
+            <view class="item-footer">
+              <view class="item-footer-left">
+                <t-icon 
+                  name="{{item.footerIcon}}" 
+                  size="14px" 
+                  color="{{item.footerColor}}" 
+                />
+                <text class="item-footer-text" style="color: {{item.footerColor}}">
+                  {{item.footerText}}
+                </text>
+              </view>
+              <t-button 
+                wx:if="{{item.status === 'available'}}"
+                theme="primary" 
+                size="small"
+                variant="outline"
+                bind:tap="onLockItem"
+                data-id="{{item.id}}"
+              >
+                去锁定
+              </t-button>
+              <t-button 
+                wx:elif="{{item.status === 'locked'}}"
+                theme="default" 
+                size="small"
+                bind:tap="onFollowItem"
+                data-id="{{item.id}}"
+              >
+                关注
+              </t-button>
+              <text 
+                wx:else
+                class="item-link"
+                catch:tap="onViewDetail"
+                data-id="{{item.id}}"
+              >
+                查看详情
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订阅提醒 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">订阅提醒</text>
+        <text class="section-link" bind:tap="onManageSubscriptions">管理</text>
+      </view>
+      <view class="subscription-card">
+        <view class="subscription-item">
+          <t-icon name="mail" size="18px" color="#0052D9" />
+          <view class="subscription-content">
+            <text class="subscription-title">滑板车到货提醒</text>
+            <text class="subscription-desc">已为你锁定通知权限，库存更新后第一时间推送</text>
+          </view>
+          <view class="subscription-switch">
+            <text class="subscription-status">订阅中</text>
+          </view>
+        </view>
+        <view class="subscription-item">
+          <t-icon name="lightbulb" size="18px" color="#0052D9" />
+          <view class="subscription-content">
+            <text class="subscription-title">链家小家电专题</text>
+            <text class="subscription-desc">每周精选小家电限时优惠速递</text>
+          </view>
+          <text class="subscription-link" bind:tap="onEditSubscription">编辑</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 社区公告 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">社区公告</text>
+        <text class="section-date">2024-05-18</text>
+      </view>
+      <view class="announcement-card">
+        <view class="announcement-item">
+          <t-icon name="error-circle" size="18px" color="#0052D9" />
+          <view class="announcement-content">
+            <text class="announcement-title">物业温馨提示</text>
+            <text class="announcement-desc">请文明交易，线下交付时佩戴门禁识别。</text>
+          </view>
+        </view>
+        <view class="announcement-item">
+          <t-icon name="time" size="18px" color="#0052D9" />
+          <view class="announcement-content">
+            <text class="announcement-title">锁定时长调整</text>
+            <text class="announcement-desc">6 月 1 日起默认锁定时长 12 小时。</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 底部导航栏 -->
+  <view class="tabbar">
+    <view class="tabbar-item active" bind:tap="onTabTap" data-tab="index">
+      <t-icon name="home" size="24px" color="#0052D9" />
+      <text class="tabbar-text active">首页</text>
+    </view>
+    <view class="tabbar-item" bind:tap="onTabTap" data-tab="locks">
+      <t-icon name="view-list" size="24px" color="#64748b" />
+      <text class="tabbar-text">锁定</text>
+    </view>
+    <view class="tabbar-publish" bind:tap="onPublish">
+      <view class="publish-btn">
+        <t-icon name="add" size="28px" color="#fff" />
+      </view>
+      <text class="tabbar-text">发布</text>
+    </view>
+    <view class="tabbar-item" bind:tap="onTabTap" data-tab="my">
+      <t-icon name="user" size="24px" color="#64748b" />
+      <text class="tabbar-text">我的</text>
+    </view>
+    <view class="tabbar-item" bind:tap="onTabTap" data-tab="admin">
+      <t-icon name="chart" size="24px" color="#64748b" />
+      <text class="tabbar-text">管理</text>
+    </view>
+  </view>
+</view>

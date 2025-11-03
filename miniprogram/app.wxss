@@ -1,10 +1,12 @@
 /**app.wxss**/
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
-  box-sizing: border-box;
-} 
+
+/* 禁用 TDesign 外部字体加载 */
+@font-face {
+  font-family: 't-icon';
+  src: url('data:font/woff;base64,') format('woff');
+}
+
+page {
+  background-color: #f5f7fa;
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+}

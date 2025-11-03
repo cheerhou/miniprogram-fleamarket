@@ -1,0 +1,202 @@
+<view class="locks-page">
+  <t-tabs value="{{activeTab}}" bind:change="onTabChange" theme="line">
+    <t-tab-panel label="进行中" value="0">
+      <scroll-view class="tab-content" scroll-y>
+        <view class="lock-list" wx:if="{{activeLocks.length > 0}}">
+          <view class="lock-card" wx:for="{{activeLocks}}" wx:key="id">
+            <view class="lock-header">
+              <view class="lock-info">
+                <view class="lock-title">{{item.title}}</view>
+                <view class="lock-price">¥{{item.price}}</view>
+              </view>
+              <t-tag theme="{{item.statusTheme}}" size="small" variant="light">
+                {{item.statusLabel}}
+              </t-tag>
+            </view>
+
+            <view class="lock-meta">
+              <view class="meta-item">
+                <t-icon name="user" size="16"></t-icon>
+                <text>卖家：{{item.seller}}</text>
+              </view>
+              <view class="meta-item">
+                <t-icon name="location" size="16"></t-icon>
+                <text>{{item.location}}</text>
+              </view>
+              <view class="meta-item">
+                <t-icon name="time" size="16"></t-icon>
+                <text>锁定时间：{{item.lockTime}}</text>
+              </view>
+            </view>
+
+            <view class="lock-countdown">
+              <t-icon name="hourglass" size="16" color="#ED7B2F"></t-icon>
+              <text class="countdown-text">剩余时间：{{item.remainingTime}}</text>
+            </view>
+
+            <view class="lock-actions">
+              <t-button
+                size="small"
+                shape="round"
+                theme="default"
+                variant="outline"
+                data-id="{{item.id}}"
+                bindtap="onContactSeller"
+              >联系卖家</t-button>
+              <t-button
+                size="small"
+                shape="round"
+                theme="primary"
+                variant="outline"
+                data-id="{{item.id}}"
+                bindtap="onExtendLock"
+              >延长锁定</t-button>
+              <t-button
+                size="small"
+                shape="round"
+                theme="danger"
+                data-id="{{item.id}}"
+                bindtap="onCancelLock"
+              >取消</t-button>
+            </view>
+
+            <view class="lock-pay-action">
+              <t-button
+                block
+                shape="round"
+                theme="primary"
+                data-id="{{item.id}}"
+                bindtap="onPayNow"
+              >立即支付</t-button>
+            </view>
+          </view>
+        </view>
+
+        <t-empty
+          wx:else
+          icon="info-circle"
+          description="暂无进行中的锁定"
+        />
+      </scroll-view>
+    </t-tab-panel>
+
+    <t-tab-panel label="已完成" value="1">
+      <scroll-view class="tab-content" scroll-y>
+        <view class="lock-list" wx:if="{{completedLocks.length > 0}}">
+          <view class="lock-card" wx:for="{{completedLocks}}" wx:key="id">
+            <view class="lock-header">
+              <view class="lock-info">
+                <view class="lock-title">{{item.title}}</view>
+                <view class="lock-price">¥{{item.price}}</view>
+              </view>
+              <t-tag theme="{{item.statusTheme}}" size="small" variant="light">
+                {{item.statusLabel}}
+              </t-tag>
+            </view>
+
+            <view class="lock-meta">
+              <view class="meta-item">
+                <t-icon name="user" size="16"></t-icon>
+                <text>卖家：{{item.seller}}</text>
+              </view>
+              <view class="meta-item">
+                <t-icon name="location" size="16"></t-icon>
+                <text>{{item.location}}</text>
+              </view>
+              <view class="meta-item">
+                <t-icon name="time" size="16"></t-icon>
+                <text>完成时间：{{item.completeTime}}</text>
+              </view>
+            </view>
+
+            <view class="lock-actions">
+              <t-button
+                size="small"
+                shape="round"
+                theme="default"
+                variant="outline"
+                data-id="{{item.id}}"
+                bindtap="onViewDetail"
+              >查看详情</t-button>
+              <t-button
+                size="small"
+                shape="round"
+                theme="primary"
+                variant="outline"
+                data-id="{{item.id}}"
+                bindtap="onContactSeller"
+              >联系卖家</t-button>
+            </view>
+          </view>
+        </view>
+
+        <t-empty
+          wx:else
+          icon="info-circle"
+          description="暂无已完成的订单"
+        />
+      </scroll-view>
+    </t-tab-panel>
+
+    <t-tab-panel label="已取消" value="2">
+      <scroll-view class="tab-content" scroll-y>
+        <view class="lock-list" wx:if="{{cancelledLocks.length > 0}}">
+          <view class="lock-card" wx:for="{{cancelledLocks}}" wx:key="id">
+            <view class="lock-header">
+              <view class="lock-info">
+                <view class="lock-title">{{item.title}}</view>
+                <view class="lock-price">¥{{item.price}}</view>
+              </view>
+              <t-tag theme="{{item.statusTheme}}" size="small" variant="light">
+                {{item.statusLabel}}
+              </t-tag>
+            </view>
+
+            <view class="lock-meta">
+              <view class="meta-item">
+                <t-icon name="user" size="16"></t-icon>
+                <text>卖家：{{item.seller}}</text>
+              </view>
+              <view class="meta-item">
+                <t-icon name="location" size="16"></t-icon>
+                <text>{{item.location}}</text>
+              </view>
+              <view class="meta-item">
+                <t-icon name="time" size="16"></t-icon>
+                <text>取消时间：{{item.cancelTime}}</text>
+              </view>
+              <view class="meta-item cancel-reason">
+                <t-icon name="error-circle" size="16"></t-icon>
+                <text>{{item.cancelReason}}</text>
+              </view>
+            </view>
+
+            <view class="lock-actions">
+              <t-button
+                size="small"
+                shape="round"
+                theme="default"
+                variant="outline"
+                data-id="{{item.id}}"
+                bindtap="onViewDetail"
+              >查看详情</t-button>
+              <t-button
+                size="small"
+                shape="round"
+                theme="primary"
+                data-id="{{item.id}}"
+                bindtap="onReLock"
+              >重新锁定</t-button>
+            </view>
+          </view>
+        </view>
+
+        <t-empty
+          wx:else
+          icon="info-circle"
+          description="暂无已取消的记录"
+        />
+      </scroll-view>
+    </t-tab-panel>
+  </t-tabs>
+</view>

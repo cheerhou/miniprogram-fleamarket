@@ -1,5 +1,12 @@
 {
+  "navigationBarTitleText": "社区二手市场",
+  "navigationStyle": "custom",
   "usingComponents": {
-    "t-button": "tdesign-miniprogram/button/button"
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-input": "tdesign-miniprogram/input/input",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group"
   }
 }

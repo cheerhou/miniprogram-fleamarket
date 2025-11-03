@@ -1,0 +1,220 @@
+<view class="publish-page">
+  <scroll-view class="form-container" scroll-y>
+    <!-- 图片上传 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-text">物品图片</text>
+        <text class="title-required">*</text>
+        <text class="title-tip">最多上传9张</text>
+      </view>
+      <view class="image-upload">
+        <view class="image-list">
+          <view 
+            class="image-item" 
+            wx:for="{{images}}" 
+            wx:key="index"
+            bindtap="onPreviewImage"
+            data-index="{{index}}"
+          >
+            <image class="image" src="{{item}}" mode="aspectFill" />
+            <view 
+              class="image-delete" 
+              catchtap="onDeleteImage"
+              data-index="{{index}}"
+            >
+              <t-icon name="close" size="16px" color="#fff" />
+            </view>
+          </view>
+          <view 
+            class="image-add" 
+            wx:if="{{images.length < maxImageCount}}"
+            bindtap="onChooseImage"
+          >
+            <t-icon name="add" size="32px" color="#0052D9" />
+            <text class="add-text">添加图片</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-text">基本信息</text>
+        <text class="title-required">*</text>
+      </view>
+      <view class="form-cells">
+        <view class="form-cell">
+          <view class="cell-label">
+            <text class="label-text">物品标题</text>
+            <text class="label-required">*</text>
+          </view>
+          <input 
+            class="cell-input"
+            placeholder="请输入物品标题（4-30字）"
+            value="{{title}}"
+            maxlength="30"
+            bindinput="onTitleInput"
+          />
+        </view>
+        
+        <view class="form-cell form-cell-column">
+          <view class="cell-label">
+            <text class="label-text">物品描述</text>
+            <text class="label-required">*</text>
+          </view>
+          <textarea 
+            class="cell-textarea"
+            placeholder="详细描述物品的状况、购买时间、使用情况等"
+            value="{{description}}"
+            maxlength="500"
+            bindinput="onDescriptionInput"
+            auto-height
+          />
+        </view>
+        
+        <view class="form-cell">
+          <view class="cell-label">
+            <text class="label-text">物品状态</text>
+            <text class="label-required">*</text>
+          </view>
+          <picker 
+            class="cell-picker"
+            mode="selector"
+            range="{{conditionOptions}}"
+            range-key="label"
+            value="{{conditionPickerValue[0]}}"
+            bindchange="onConditionChange"
+          >
+            <view class="picker-value">
+              <text>{{condition}}</text>
+              <t-icon name="chevron-down" size="16px" color="#86909c" />
+            </view>
+          </picker>
+        </view>
+        
+        <view class="form-cell">
+          <view class="cell-label">
+            <text class="label-text">物品分类</text>
+            <text class="label-required">*</text>
+          </view>
+          <picker 
+            class="cell-picker"
+            mode="selector"
+            range="{{categoryOptions}}"
+            range-key="label"
+            value="{{categoryPickerValue[0]}}"
+            bindchange="onCategoryChange"
+          >
+            <view class="picker-value">
+              <text>{{category}}</text>
+              <t-icon name="chevron-down" size="16px" color="#86909c" />
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 价格信息 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-text">价格信息</text>
+        <text class="title-required">*</text>
+      </view>
+      <view class="form-cells">
+        <view class="form-cell">
+          <view class="cell-label">
+            <text class="label-text">出售价格</text>
+            <text class="label-required">*</text>
+          </view>
+          <view class="price-input-wrapper">
+            <text class="price-symbol">¥</text>
+            <input 
+              class="price-input"
+              type="digit"
+              placeholder="请输入价格"
+              value="{{price}}"
+              bindinput="onPriceInput"
+            />
+          </view>
+        </view>
+      </view>
+      <view class="price-tip">
+        <t-icon name="info-circle" size="14px" color="#86909c" />
+        <text class="tip-text">建议定价合理，提高成交率</text>
+      </view>
+    </view>
+
+    <!-- 交易信息 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text class="title-text">交易信息</text>
+        <text class="title-required">*</text>
+      </view>
+      <view class="form-cells">
+        <view class="form-cell">
+          <view class="cell-label">
+            <text class="label-text">交易地点</text>
+            <text class="label-required">*</text>
+          </view>
+          <picker 
+            class="cell-picker"
+            mode="selector"
+            range="{{locationOptions}}"
+            range-key="label"
+            value="{{locationPickerValue[0]}}"
+            bindchange="onLocationChange"
+          >
+            <view class="picker-value {{location ? '' : 'placeholder'}}">
+              <text>{{location || '请选择交易地点'}}</text>
+              <t-icon name="chevron-down" size="16px" color="#86909c" />
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="location-tip">
+        <t-icon name="location" size="14px" color="#86909c" />
+        <text class="tip-text">建议选择小区内公共区域，确保交易安全</text>
+      </view>
+    </view>
+
+    <!-- 发布须知 -->
+    <view class="form-section">
+      <view class="notice-card">
+        <view class="notice-title">
+          <t-icon name="error-circle" size="16px" color="#0052D9" />
+          <text>发布须知</text>
+        </view>
+        <view class="notice-content">
+          <text class="notice-item">• 请确保物品信息真实准确</text>
+          <text class="notice-item">• 禁止发布违禁品、假冒伪劣商品</text>
+          <text class="notice-item">• 物品发布后立即上架，其他用户可见</text>
+          <text class="notice-item">• 建议线下交易时当面验货</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <t-button 
+      theme="default" 
+      variant="outline"
+      size="large"
+      bindtap="onSaveDraft"
+    >
+      保存草稿
+    </t-button>
+    <t-button 
+      theme="primary" 
+      size="large"
+      bindtap="onPublish"
+    >
+      立即发布
+    </t-button>
+  </view>
+
+</view>

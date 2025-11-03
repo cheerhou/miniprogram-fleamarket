@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/locks/locks",
+    "pages/publish/publish",
+    "pages/my/my",
     "pages/logs/logs"
   ],
   "window": {

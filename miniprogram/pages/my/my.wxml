@@ -1,0 +1,169 @@
+<view class="my-page">
+  <scroll-view class="page-scroll" scroll-y>
+    <view class="profile-card">
+      <view class="profile-header">
+        <view class="profile-main">
+          <t-avatar
+            class="profile-avatar"
+            size="72rpx"
+          >{{userInfo.name.substring(0, 1)}}</t-avatar>
+          <view class="profile-info">
+            <view class="profile-name">{{userInfo.name}}</view>
+            <view class="profile-location">{{userInfo.community}}</view>
+            <view class="profile-meta">{{userInfo.address}}</view>
+            <t-tag theme="success" variant="light" size="small">已认证住户</t-tag>
+          </view>
+        </view>
+        <t-button
+          class="profile-edit"
+          size="small"
+          variant="outline"
+          theme="primary"
+          bindtap="onEditProfile"
+        >编辑资料</t-button>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <t-grid column="4" border="{{false}}">
+        <block wx:for="{{quickStats}}" wx:key="text">
+          <t-grid-item
+            class="grid-item"
+            data-url="{{item.url}}"
+            data-text="{{item.text}}"
+            bindtap="onQuickLinkTap"
+          >
+            <view class="grid-icon grid-icon-{{item.color}}">
+              <t-icon name="{{item.icon}}" size="26"></t-icon>
+            </view>
+            <view class="grid-text">{{item.text}}</view>
+            <view class="grid-count grid-count-{{item.color}}">{{item.value}}</view>
+          </t-grid-item>
+        </block>
+      </t-grid>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">
+        <view class="section-name">进行中的锁定</view>
+        <t-tag size="small" variant="light" theme="primary">全部</t-tag>
+      </view>
+      <view class="content-card">
+        <view class="card-title-wrap">
+          <view class="card-title">{{lockingOrder.title}}</view>
+          <t-tag theme="{{lockingOrder.statusTheme}}" size="small" variant="light">
+            {{lockingOrder.statusLabel}}
+          </t-tag>
+        </view>
+        <view class="card-desc">{{lockingOrder.remaining}}</view>
+        <view class="card-meta">
+          <t-icon name="location" size="16"></t-icon>
+          <text>{{lockingOrder.location}}</text>
+        </view>
+        <view class="action-row">
+          <t-button
+            shape="round"
+            theme="default"
+            variant="outline"
+            bindtap="onContactSeller"
+          >联系卖家</t-button>
+          <t-button
+            shape="round"
+            theme="primary"
+            variant="outline"
+            bindtap="onExtendLock"
+          >延长锁定</t-button>
+          <t-button
+            shape="round"
+            theme="danger"
+            bindtap="onCancelLock"
+          >取消</t-button>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">
+        <view class="section-name">我的发布</view>
+        <t-tag size="small" variant="light" theme="primary">管理</t-tag>
+      </view>
+      <view class="content-card">
+        <view class="publish-row">
+          <view class="publish-thumb">
+            <t-icon name="sound" size="36"></t-icon>
+          </view>
+          <view class="publish-content">
+            <view class="card-title-wrap">
+              <view class="card-title">{{publishedItem.title}}</view>
+              <t-tag theme="primary" size="small" variant="light">{{publishedItem.statusLabel}}</t-tag>
+            </view>
+            <view class="card-desc">{{publishedItem.focus}}</view>
+            <view class="publish-stats">
+              <block wx:for="{{publishedItem.stats}}" wx:key="index">
+                <t-tag size="small" variant="light-outline">{{item}}</t-tag>
+              </block>
+            </view>
+          </view>
+        </view>
+        <view class="action-row">
+          <t-button
+            shape="round"
+            variant="outline"
+            theme="primary"
+            bindtap="onPromoteItem"
+          >发布到群聊</t-button>
+          <t-button
+            shape="round"
+            theme="primary"
+            bindtap="onFinishDeal"
+          >立即成交</t-button>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">
+        <view class="section-name">账单与数据</view>
+        <t-tag size="small" variant="light" theme="primary">对账</t-tag>
+      </view>
+      <view class="panel-grid">
+        <block wx:for="{{paymentPanels}}" wx:key="title">
+          <view
+            class="panel-card panel-card-{{item.theme}}"
+            data-title="{{item.title}}"
+            bindtap="onPaymentPanelTap"
+          >
+            <view class="panel-title">{{item.title}}</view>
+            <view class="panel-meta">{{item.meta}}</view>
+            <view class="panel-action">
+              {{item.actionText}}
+              <t-icon name="chevron-right"></t-icon>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-title">
+        <view class="section-name">消息提醒</view>
+        <t-tag size="small" variant="light-outline" theme="primary">订阅管理</t-tag>
+      </view>
+      <t-cell-group theme="card">
+        <block wx:for="{{notificationSettings}}" wx:key="title">
+          <t-cell
+            title="{{item.title}}"
+            description="{{item.description}}"
+          >
+            <t-switch
+              slot="rightIcon"
+              value="{{item.value}}"
+              data-index="{{index}}"
+              bindchange="onNotificationToggle"
+            ></t-switch>
+          </t-cell>
+        </block>
+      </t-cell-group>
+    </view>
+  </scroll-view>
+</view>
