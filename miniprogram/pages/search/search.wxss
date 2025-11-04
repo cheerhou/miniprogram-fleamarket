@@ -55,10 +55,11 @@ page {
   flex: 1;
   display: flex;
   align-items: center;
+  margin-right: 16rpx;
 }
 
 .search-box {
-  flex: 1;
+  width: 100%;
   background: #fff;
   border-radius: 32rpx;
   padding: 20rpx 32rpx;
@@ -72,6 +73,9 @@ page {
   flex: 1;
   font-size: 28rpx;
   color: #1f2937;
+  background: transparent;
+  border: none;
+  outline: none;
 }
 
 .search-clear {
