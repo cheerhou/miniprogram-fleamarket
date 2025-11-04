@@ -1,159 +1,189 @@
-// miniprogram/pages/detail/detail.ts
-interface ItemDetail {
-  id: string
-  title: string
-  description: string
-  price: number
-  condition: string
-  category: string
-  location: string
-  images: string[]
-  status: 'available' | 'locked' | 'sold'
-  sellerId: string
-  sellerName: string
-  sellerAvatar: string
-  publishTime: string
-  lockInfo?: {
-    lockUserId: string
-    lockUserName: string
-    lockTime: string
-    expireTime: string
-  }
-}
-
-interface Comment {
-  id: string
-  userId: string
-  userName: string
-  userAvatar: string
-  content: string
-  createTime: string
-  isSeller?: boolean
-  replyTo?: string
-}
+// detail.ts
+import cloudUtils from '../../utils/cloud'
 
 Page({
   data: {
+    // 物品ID
+    itemId: '',
     // 物品详情
-    item: null as ItemDetail | null,
-    
-    // 图片轮播
+    item: null as any,
+    // 当前图片索引
     currentImageIndex: 0,
-    
-    // 用户操作状态
-    isFavorited: false,
-    isSubscribed: false,
-    
-    // 留言相关
-    comments: [] as Comment[],
-    commentInput: '',
-    
-    // 锁定倒计时
-    lockCountdown: '',
-    
-    // 页面状态
+    // 加载状态
     loading: true,
-    
-    // 模拟数据
-    mockItem: {
-      id: '1',
-      title: '小米音箱 Pro',
-      description: '自用小米音箱 Pro，一直放在客厅，音质很好，支持小爱同学语音控制，可连接蓝牙、Wi-Fi。机身无刮痕，出货前会进行清洁并附赠备用电源线。',
-      price: 128,
-      condition: '9成新',
-      category: '智能设备',
-      location: '北区 3 栋大厅',
-      images: [
-        '/images/item1-1.jpg',
-        '/images/item1-2.jpg',
-        '/images/item1-3.jpg'
-      ],
-      status: 'locked' as const,
-      sellerId: 'seller1',
-      sellerName: '徐小米',
-      sellerAvatar: '/images/avatar1.jpg',
-      publishTime: '2024-05-19',
-      lockInfo: {
-        lockUserId: 'buyer1',
-        lockUserName: '王同学',
-        lockTime: '2024-05-19 17:30',
-        expireTime: '2024-05-19 22:30'
-      }
-    } as ItemDetail,
-    
-    mockComments: [
-      {
-        id: '1',
-        userId: 'buyer1',
-        userName: '王同学',
-        userAvatar: '/images/avatar2.jpg',
-        content: '周末可约看货吗？想确认一下音质表现。',
-        createTime: '今天 10:45',
-        replyTo: ''
-      },
-      {
-        id: '2',
-        userId: 'seller1',
-        userName: '徐小米',
-        userAvatar: '/images/avatar1.jpg',
-        content: '下午 3 点后都在家。',
-        createTime: '今天 11:20',
-        isSeller: true,
-        replyTo: '1'
-      },
-      {
-        id: '3',
-        userId: 'admin',
-        userName: '小区管家',
-        userAvatar: '/images/avatar3.jpg',
-        content: '交易完成后，请记得在订单中确认收货。',
-        createTime: '昨天 21:12'
-      }
-    ] as Comment[]
+    // 是否已锁定
+    isLocked: false,
+    // 是否已关注
+    isFollowed: false
   },
-
-  // 倒计时定时器
-  countdownTimer: null as number | null,
 
   onLoad(options: any) {
     const { id } = options
-    console.log('物品详情页面加载，物品ID:', id)
-    
-    // 加载物品详情
-    this.loadItemDetail(id)
-    
-    // 开始倒计时
-    this.startCountdown()
-  },
-
-  onShow() {
-    // 页面显示时刷新数据
-    this.refreshData()
-  },
-
-  onUnload() {
-    // 清除倒计时
-    if (this.countdownTimer) {
-      clearInterval(this.countdownTimer)
+    if (id) {
+      this.setData({
+        itemId: id
+      })
+      this.loadItemDetail(id)
+    } else {
+      wx.showToast({
+        title: '物品ID不存在',
+        icon: 'none'
+      })
+      setTimeout(() => {
+        wx.navigateBack()
+      }, 1500)
     }
   },
 
   // 加载物品详情
-  loadItemDetail(itemId: string) {
-    // TODO: 从云数据库获取真实数据
-    // 这里使用模拟数据
-    setTimeout(() => {
+  async loadItemDetail(id: string) {
+    try {
+      wx.showLoading({
+        title: '加载中...'
+      })
+
+      // 先尝试从数据库获取真实数据
+      try {
+        const db = wx.cloud.database()
+        const result = await db.collection('items').doc(id).get()
+        
+        if (result.data) {
+          const item = result.data
+          // 格式化数据
+          const formattedItem = {
+            _id: item._id,
+            id: item._id,
+            title: item.title,
+            description: item.description,
+            price: item.price,
+            condition: item.condition,
+            category: item.category,
+            location: item.location,
+            images: item.images || [],
+            status: item.status || 'available',
+            sellerName: item.sellerName || '用户',
+            sellerAvatar: item.sellerAvatar || '',
+            publishTime: this.formatDate(item.publishTime),
+            viewCount: item.viewCount || 0,
+            lockInfo: item.lockInfo || null
+          }
+
+          this.setData({
+            item: formattedItem,
+            loading: false
+          })
+
+          // 增加浏览量
+          this.incrementViewCount(id)
+          return
+        }
+      } catch (dbError) {
+        console.log('从数据库获取失败，使用模拟数据:', dbError)
+      }
+
+      // 如果数据库获取失败，使用模拟数据
+      const mockItems = {
+        '1': {
+          id: '1',
+          title: '小米音箱 Pro',
+          description: '九成新小米音箱 Pro，功能完好，音质清晰。支持小爱同学语音控制，可以播放音乐、查询天气、设置闹钟等。原价299元，现价128元转让。包含原装充电器和说明书。',
+          price: 128,
+          condition: '9成新',
+          category: '数码',
+          location: '北区 3 栋大厅',
+          images: [
+            'https://tdesign.gtimg.com/miniprogram/images/swiper1.png',
+            'https://tdesign.gtimg.com/miniprogram/images/swiper2.png'
+          ],
+          status: 'available',
+          sellerName: '张三',
+          sellerAvatar: '',
+          publishTime: '2024-05-18 10:30',
+          viewCount: 12,
+          lockInfo: null
+        },
+        '2': {
+          id: '2',
+          title: '美的空气炸锅',
+          description: '八成新美的空气炸锅，3L容量，功能完好。支持无油烹饪，健康环保。使用次数不多，外观有轻微使用痕迹。原价399元，现价198元转让。',
+          price: 198,
+          condition: '8成新',
+          category: '家居',
+          location: '南区 5 栋大堂',
+          images: [
+            'https://tdesign.gtimg.com/miniprogram/images/swiper2.png',
+            'https://tdesign.gtimg.com/miniprogram/images/swiper1.png'
+          ],
+          status: 'locked',
+          sellerName: '李四',
+          sellerAvatar: '',
+          publishTime: '2024-05-18 09:15',
+          viewCount: 5,
+          lockInfo: { lockTime: '2024-05-18 10:00', expireTime: '2024-05-18 22:00' }
+        },
+        '3': {
+          id: '3',
+          title: 'Ninebot 儿童滑板车',
+          description: '七成新Ninebot儿童滑板车，适合3-8岁儿童。电池续航良好，充电器齐全。车身有轻微划痕，不影响使用。原价599元，现价299元转让。',
+          price: 299,
+          condition: '7成新',
+          category: '童趣',
+          location: '东区 3 栋',
+          images: [
+            'https://tdesign.gtimg.com/miniprogram/images/swiper1.png'
+          ],
+          status: 'sold',
+          sellerName: '王五',
+          sellerAvatar: '',
+          publishTime: '2024-05-17 16:45',
+          viewCount: 0,
+          lockInfo: null
+        }
+      }
+
+      const mockItem = mockItems[id as keyof typeof mockItems] || mockItems['1']
+
       this.setData({
-        item: this.data.mockItem,
-        comments: this.data.mockComments,
+        item: mockItem,
         loading: false
       })
-    }, 500)
+
+      // 增加浏览量
+      this.incrementViewCount(id)
+
+    } catch (error) {
+      console.error('加载物品详情失败:', error)
+      wx.showToast({
+        title: '加载失败，请重试',
+        icon: 'none'
+      })
+    } finally {
+      wx.hideLoading()
+    }
   },
 
-  // 刷新数据
-  refreshData() {
-    // TODO: 刷新物品状态和留言
+  // 格式化日期
+  formatDate(date: any) {
+    if (!date) return ''
+    
+    const d = new Date(date)
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    const hour = String(d.getHours()).padStart(2, '0')
+    const minute = String(d.getMinutes()).padStart(2, '0')
+    
+    return `${year}-${month}-${day} ${hour}:${minute}`
+  },
+
+  // 增加浏览量
+  async incrementViewCount(id: string) {
+    try {
+      // TODO: 调用云函数增加浏览量
+      console.log('增加浏览量:', id)
+    } catch (error) {
+      console.error('增加浏览量失败:', error)
+    }
   },
 
   // 图片轮播变化
@@ -166,172 +196,169 @@ Page({
   // 预览图片
   onPreviewImage() {
     const { item } = this.data
-    if (!item) return
-    
-    wx.previewImage({
-      current: item.images[this.data.currentImageIndex],
-      urls: item.images
-    })
+    if (item && item.images && item.images.length > 0) {
+      wx.previewImage({
+        current: item.images[this.data.currentImageIndex],
+        urls: item.images
+      })
+    }
   },
 
-  // 收藏/取消收藏
-  onToggleFavorite() {
-    const { isFavorited } = this.data
+  // 锁定物品
+  onLockItem() {
+    const { item, isLocked } = this.data
     
-    // TODO: 调用云函数更新收藏状态
-    this.setData({
-      isFavorited: !isFavorited
-    })
-    
-    wx.showToast({
-      title: isFavorited ? '已取消收藏' : '已收藏',
-      icon: 'success'
-    })
-  },
-
-  // 订阅/取消订阅
-  onToggleSubscribe(e: any) {
-    const { isSubscribed } = this.data
-    
-    // TODO: 调用云函数更新订阅状态
-    this.setData({
-      isSubscribed: !isSubscribed
-    })
-    
-    wx.showToast({
-      title: isSubscribed ? '已取消关注' : '已关注',
-      icon: 'success'
-    })
-  },
-
-  // 联系卖家
-  onContactSeller() {
-    const { item } = this.data
-    if (!item) return
-    
-    // TODO: 跳转到聊天页面或调用客服功能
-    wx.showToast({
-      title: '正在联系卖家...',
-      icon: 'loading'
-    })
-  },
-
-  // 锁定并支付
-  onLockAndPay() {
-    const { item } = this.data
-    if (!item) return
-    
-    if (item.status === 'sold') {
+    if (isLocked) {
       wx.showToast({
-        title: '物品已售出',
+        title: '您已锁定该物品',
         icon: 'none'
       })
       return
     }
-    
-    if (item.status === 'locked') {
-      wx.showToast({
-        title: '物品已被锁定',
-        icon: 'none'
-      })
-      return
-    }
-    
-    // TODO: 调用锁定接口
-    wx.showLoading({
-      title: '锁定中...'
+
+    wx.showModal({
+      title: '确认锁定',
+      content: '锁定后将为您保留 12 小时，请在锁定期内完成支付',
+      confirmText: '确认锁定',
+      success: (res) => {
+        if (res.confirm) {
+          this.lockItem()
+        }
+      }
     })
-    
-    setTimeout(() => {
-      wx.hideLoading()
+  },
+
+  // 执行锁定
+  async lockItem() {
+    try {
+      wx.showLoading({
+        title: '锁定中...'
+      })
+
+      // TODO: 调用云函数锁定物品
+      console.log('锁定物品:', this.data.itemId)
+
+      this.setData({
+        isLocked: true
+      })
+
       wx.showToast({
         title: '锁定成功',
         icon: 'success'
       })
-      
-      // 刷新页面状态
-      this.loadItemDetail(item.id)
-    }, 1500)
-  },
 
-  // 留言输入
-  onCommentInput(e: any) {
-    this.setData({
-      commentInput: e.detail.value
-    })
-  },
-
-  // 发送留言
-  onSendComment() {
-    const { commentInput, comments } = this.data
-    
-    if (!commentInput.trim()) {
+    } catch (error) {
+      console.error('锁定失败:', error)
       wx.showToast({
-        title: '请输入留言内容',
+        title: '锁定失败，请重试',
         icon: 'none'
       })
-      return
+    } finally {
+      wx.hideLoading()
     }
+  },
+
+  // 关注物品
+  onFollowItem() {
+    const { isFollowed } = this.data
     
-    // TODO: 调用云函数发送留言
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      userId: 'current_user',
-      userName: '当前用户',
-      userAvatar: '/images/current-avatar.jpg',
-      content: commentInput,
-      createTime: '刚刚'
+    if (isFollowed) {
+      this.unfollowItem()
+    } else {
+      this.followItem()
     }
-    
-    this.setData({
-      comments: [...comments, newComment],
-      commentInput: ''
-    })
-    
-    wx.showToast({
-      title: '留言发送成功',
-      icon: 'success'
+  },
+
+  // 关注
+  async followItem() {
+    try {
+      // TODO: 调用云函数关注物品
+      console.log('关注物品:', this.data.itemId)
+
+      this.setData({
+        isFollowed: true
+      })
+
+      wx.showToast({
+        title: '关注成功',
+        icon: 'success'
+      })
+
+    } catch (error) {
+      console.error('关注失败:', error)
+      wx.showToast({
+        title: '关注失败，请重试',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 取消关注
+  async unfollowItem() {
+    try {
+      // TODO: 调用云函数取消关注
+      console.log('取消关注物品:', this.data.itemId)
+
+      this.setData({
+        isFollowed: false
+      })
+
+      wx.showToast({
+        title: '已取消关注',
+        icon: 'success'
+      })
+
+    } catch (error) {
+      console.error('取消关注失败:', error)
+      wx.showToast({
+        title: '操作失败，请重试',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 联系卖家
+  onContactSeller() {
+    wx.showModal({
+      title: '联系卖家',
+      content: '您确定要联系卖家吗？',
+      confirmText: '确定',
+      success: (res) => {
+        if (res.confirm) {
+          // TODO: 实现联系卖家功能
+          wx.showToast({
+            title: '联系功能开发中',
+            icon: 'none'
+          })
+        }
+      }
     })
   },
 
   // 分享
-  onShareAppMessage() {
-    const { item } = this.data
-    if (!item) return {}
-    
-    return {
-      title: item.title,
-      path: `/pages/detail/detail?id=${item.id}`,
-      imageUrl: item.images[0]
-    }
+  onShare() {
+    wx.showActionSheet({
+      itemList: ['分享给微信好友', '生成海报'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.onShareAppMessage()
+        } else if (res.tapIndex === 1) {
+          wx.showToast({
+            title: '海报生成开发中',
+            icon: 'none'
+          })
+        }
+      }
+    })
   },
 
-  // 开始倒计时
-  startCountdown() {
+  // 分享到微信
+  onShareAppMessage() {
     const { item } = this.data
-    if (!item || !item.lockInfo) return
-    
-    this.countdownTimer = setInterval(() => {
-      const now = new Date().getTime()
-      const expireTime = new Date(item.lockInfo!.expireTime).getTime()
-      const remaining = expireTime - now
-      
-      if (remaining <= 0) {
-        clearInterval(this.countdownTimer!)
-        this.setData({
-          lockCountdown: '已过期'
-        })
-        // 刷新数据
-        this.loadItemDetail(item.id)
-        return
-      }
-      
-      const hours = Math.floor(remaining / (1000 * 60 * 60))
-      const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60))
-      
-      this.setData({
-        lockCountdown: `剩余 ${hours} 小时 ${minutes} 分钟`
-      })
-    }, 1000)
+    return {
+      title: item ? `${item.title} - ¥${item.price}` : '社区二手市场',
+      path: `/pages/detail/detail?id=${this.data.itemId}`,
+      imageUrl: item && item.images.length > 0 ? item.images[0] : ''
+    }
   }
 })

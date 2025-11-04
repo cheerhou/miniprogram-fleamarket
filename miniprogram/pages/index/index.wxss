@@ -271,6 +271,13 @@ page {
   background: linear-gradient(135deg, rgba(248, 113, 113, 0.1) 0%, rgba(251, 146, 60, 0.1) 100%);
 }
 
+.item-image-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 32rpx;
+  object-fit: cover;
+}
+
 .item-image-text {
   font-size: 28rpx;
   color: #0052D9;

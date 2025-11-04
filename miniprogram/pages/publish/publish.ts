@@ -1,4 +1,6 @@
 // miniprogram/pages/publish/publish.ts
+import cloudUtils from '../../utils/cloud'
+
 Page({
   data: {
     // 表单数据
@@ -6,7 +8,7 @@ Page({
     description: '',
     price: '',
     condition: '9成新',
-    category: '数码',
+    category: '家居',
     location: '',
     images: [] as string[],
     
@@ -19,8 +21,8 @@ Page({
       { label: '其他', value: '其他' }
     ],
     categoryOptions: [
-      { label: '数码', value: '数码' },
       { label: '家居', value: '家居' },
+      { label: '数码', value: '数码' },
       { label: '童趣', value: '童趣' },
       { label: '手作', value: '手作' },
       { label: '图书', value: '图书' },
@@ -160,9 +162,9 @@ Page({
       return false
     }
 
-    if (title.length < 4) {
+    if (title.length < 2) {
       wx.showToast({
-        title: '标题至少4个字符',
+        title: '标题至少2个字符',
         icon: 'none'
       })
       return false
@@ -204,7 +206,7 @@ Page({
   },
 
   // 发布物品
-  onPublish() {
+  async onPublish() {
     if (!this.validateForm()) {
       return
     }
@@ -213,10 +215,57 @@ Page({
       title: '发布中...'
     })
 
-    // TODO: 上传图片到云存储
-    // TODO: 调用云函数创建物品记录
-    
-    setTimeout(() => {
+    try {
+      const { title, description, price, condition, category, location, images } = this.data
+      
+      // 1. 上传图片到云存储
+      const uploadResult = await this.uploadImages(images)
+      if (!uploadResult.success) {
+        throw new Error(uploadResult.message)
+      }
+      
+      // 2. 创建物品记录
+      const itemData = {
+        title,
+        description,
+        price,
+        condition,
+        category,
+        location,
+        images: uploadResult.data?.map((item: any) => item.fileID) || []
+      }
+      
+      console.log('准备创建物品记录:', itemData)
+      
+      // 临时解决方案：直接使用数据库API
+      try {
+        const db = wx.cloud.database()
+        
+        // 注意：小程序端无法直接创建集合，需要在控制台手动创建
+        console.log('请确保在云开发控制台已创建 items 集合')
+        
+        const result = await db.collection('items').add({
+          data: {
+            ...itemData,
+            status: 'available',
+            sellerId: '', // 暂时为空
+            sellerName: '用户',
+            sellerAvatar: '',
+            publishTime: new Date(),
+            updateTime: new Date(),
+            viewCount: 0,
+            lockInfo: null
+          }
+        })
+        console.log('直接创建物品成功:', result)
+      } catch (dbError) {
+        console.error('直接数据库操作失败:', dbError)
+        throw new Error('数据库操作失败，请检查云开发权限')
+      }
+      
+      // 3. 清除草稿
+      wx.removeStorageSync('publish_draft')
+      
       wx.hideLoading()
       wx.showToast({
         title: '发布成功',
@@ -227,7 +276,68 @@ Page({
       setTimeout(() => {
         wx.navigateBack()
       }, 2000)
-    }, 1500)
+      
+    } catch (error: any) {
+      wx.hideLoading()
+      wx.showToast({
+        title: error.message || '发布失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 上传图片
+  async uploadImages(tempFilePaths: string[]) {
+    try {
+      console.log('开始上传图片，数量:', tempFilePaths.length)
+      
+      // 直接使用 wx.cloud.uploadFile 上传图片
+      const uploadTasks = tempFilePaths.map(async (filePath, index) => {
+        try {
+          const fileName = `items/${Date.now()}_${index}_${Math.random().toString(36).substr(2, 9)}.jpg`
+          
+          const uploadResult = await wx.cloud.uploadFile({
+            cloudPath: fileName,
+            filePath: filePath
+          })
+          
+          console.log('图片上传成功:', uploadResult.fileID)
+          
+          return {
+            fileID: uploadResult.fileID,
+            tempFileURL: uploadResult.fileID,
+            fileName: fileName
+          }
+        } catch (error) {
+          console.error(`图片上传失败 ${filePath}:`, error)
+          return null
+        }
+      })
+      
+      const results = await Promise.all(uploadTasks)
+      const successResults = results.filter(result => result !== null)
+      
+      if (successResults.length === 0) {
+        return {
+          success: false,
+          message: '所有图片上传失败'
+        }
+      }
+      
+      console.log('成功上传图片数量:', successResults.length)
+      
+      return {
+        success: true,
+        data: successResults
+      }
+      
+    } catch (error) {
+      console.error('图片上传异常:', error)
+      return {
+        success: false,
+        message: '图片上传失败'
+      }
+    }
   },
 
   // 保存草稿

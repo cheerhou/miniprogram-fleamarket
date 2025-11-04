@@ -51,7 +51,7 @@
           </view>
           <input 
             class="cell-input"
-            placeholder="请输入物品标题（4-30字）"
+            placeholder="请输入物品标题（2-30字）"
             value="{{title}}"
             maxlength="30"
             bindinput="onTitleInput"

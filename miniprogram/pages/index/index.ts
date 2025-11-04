@@ -1,4 +1,6 @@
 // index.ts
+import cloudUtils from '../../utils/cloud'
+
 Page({
   data: {
     // 状态栏高度
@@ -75,9 +77,35 @@ Page({
   },
 
   // 加载数据
-  loadData() {
-    // TODO: 从云数据库加载数据
-    console.log('加载首页数据')
+  async loadData() {
+    try {
+      wx.showLoading({
+        title: '加载中...'
+      })
+      
+      // 从云数据库获取物品列表
+      const result = await cloudUtils.getItems({
+        page: 1,
+        pageSize: 20
+      })
+      
+      if (result.success) {
+        this.setData({
+          items: result.data.list
+        })
+      } else {
+        throw new Error(result.message)
+      }
+      
+    } catch (error) {
+      console.error('加载数据失败:', error)
+      wx.showToast({
+        title: '加载失败，请重试',
+        icon: 'none'
+      })
+    } finally {
+      wx.hideLoading()
+    }
   },
 
   // 搜索输入
@@ -134,6 +162,15 @@ Page({
   onItemTap(e: any) {
     const { id } = e.currentTarget.dataset
     console.log('点击物品:', id)
+    
+    if (!id) {
+      wx.showToast({
+        title: '物品ID不存在',
+        icon: 'none'
+      })
+      return
+    }
+    
     wx.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })

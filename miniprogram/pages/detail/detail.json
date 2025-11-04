@@ -1,13 +1,7 @@
 {
   "navigationBarTitleText": "物品详情",
-  "usingComponents": {
-    "t-button": "tdesign-miniprogram/button/button",
-    "t-icon": "tdesign-miniprogram/icon/icon",
-    "t-swiper": "tdesign-miniprogram/swiper/swiper",
-    "t-image": "tdesign-miniprogram/image/image",
-    "t-input": "tdesign-miniprogram/input/input",
-    "t-switch": "tdesign-miniprogram/switch/switch",
-    "t-loading": "tdesign-miniprogram/loading/loading",
-    "t-toast": "tdesign-miniprogram/toast/toast"
-  }
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#f7f9fc",
+  "enablePullDownRefresh": false
 }

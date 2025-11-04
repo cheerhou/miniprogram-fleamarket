@@ -1,200 +1,108 @@
-<view class="detail-page">
-  <!-- 加载状态 -->
+<!--detail.wxml-->
+<view class="page">
   <view wx:if="{{loading}}" class="loading-container">
     <t-loading theme="circular" size="40rpx" text="加载中..." />
   </view>
 
-  <!-- 主要内容 -->
-  <view wx:else class="content-container">
+  <view wx:else class="detail-container">
     <!-- 图片轮播 -->
     <view class="image-section">
-      <t-swiper 
+      <swiper 
         class="image-swiper"
+        indicator-dots="{{item.images.length > 1}}"
         autoplay="{{false}}"
-        indicator-dots="{{true}}"
-        bindchange="onSwiperChange"
-        list="{{item.images}}"
+        bind:change="onSwiperChange"
       >
-        <image 
-          class="swiper-image" 
-          src="{{item}}" 
-          mode="aspectFill"
-          bindtap="onPreviewImage"
-          wx:for="{{item.images}}" 
-          wx:key="index"
-        />
-      </t-swiper>
-      
-      <!-- 收藏按钮 -->
-      <view class="favorite-btn" bindtap="onToggleFavorite">
-        <t-icon 
-          name="heart" 
-          size="48rpx" 
-          color="{{isFavorited ? '#e34d59' : '#86909c'}}"
-          fill="{{isFavorited}}"
-        />
-      </view>
+        <swiper-item wx:for="{{item.images}}" wx:key="*this">
+          <image 
+            src="{{item}}" 
+            mode="aspectFill"
+            class="swiper-image"
+            bind:tap="onPreviewImage"
+          />
+        </swiper-item>
+      </swiper>
       
       <!-- 图片指示器 -->
-      <view class="image-indicator">
+      <view wx:if="{{item.images.length > 1}}" class="image-indicator">
         {{currentImageIndex + 1}} / {{item.images.length}}
       </view>
     </view>
 
     <!-- 物品信息 -->
     <view class="info-section">
-      <!-- 状态标签 -->
-      <view class="status-tags">
-        <view wx:if="{{item.status === 'locked'}}" class="status-tag locked">
-          <t-icon name="time" size="24rpx" />
-          <text>正在锁定中 · {{lockCountdown}}</text>
-        </view>
-        <view wx:if="{{item.status === 'sold'}}" class="status-tag sold">
-          <t-icon name="check" size="24rpx" />
-          <text>已售出</text>
-        </view>
-        <view wx:if="{{item.status === 'available'}}" class="status-tag available">
-          <t-icon name="check-circle" size="24rpx" />
-          <text>可售</text>
-        </view>
-      </view>
-
-      <!-- 价格和基本信息 -->
-      <view class="price-info">
+      <view class="price-row">
         <text class="price">¥{{item.price}}</text>
-        <view class="meta-info">
-          <text class="condition">{{item.condition}}</text>
-          <text class="location">{{item.location}}</text>
+        <view class="status-tag">
+          <t-tag theme="success" variant="light" size="small">{{item.condition}}</t-tag>
         </view>
       </view>
-
-      <!-- 标题和描述 -->
-      <view class="title-section">
+      
+      <view class="title-row">
         <text class="title">{{item.title}}</text>
-        <text class="description">{{item.description}}</text>
       </view>
+      
+      <view class="meta-row">
+        <view class="meta-item">
+          <t-icon name="location" size="16px" color="#64748b" />
+          <text class="meta-text">{{item.location}}</text>
+        </view>
+        <view class="meta-item">
+          <t-icon name="browse" size="16px" color="#64748b" />
+          <text class="meta-text">{{item.viewCount}} 人浏览</text>
+        </view>
+        <view class="meta-item">
+          <t-icon name="time" size="16px" color="#64748b" />
+          <text class="meta-text">{{item.publishTime}}</text>
+        </view>
+      </view>
+    </view>
 
-      <!-- 分类标签 -->
-      <view class="category-tags">
-        <text class="category-tag">{{item.category}}</text>
-        <text class="tag">支持微信支付</text>
-        <text class="tag">同小区可见</text>
+    <!-- 详细描述 -->
+    <view class="section">
+      <view class="section-title">物品描述</view>
+      <view class="description">
+        <text class="desc-text">{{item.description}}</text>
+      </view>
+    </view>
+
+    <!-- 交易信息 -->
+    <view class="section">
+      <view class="section-title">交易信息</view>
+      <view class="trade-info">
+        <view class="trade-item">
+          <text class="trade-label">分类</text>
+          <text class="trade-value">{{item.category}}</text>
+        </view>
+        <view class="trade-item">
+          <text class="trade-label">成色</text>
+          <text class="trade-value">{{item.condition}}</text>
+        </view>
+        <view class="trade-item">
+          <text class="trade-label">交易地点</text>
+          <text class="trade-value">{{item.location}}</text>
+        </view>
       </view>
     </view>
 
     <!-- 卖家信息 -->
-    <view class="seller-section">
+    <view class="section">
+      <view class="section-title">卖家信息</view>
       <view class="seller-info">
-        <image class="seller-avatar" src="{{item.sellerAvatar}}" />
+        <view class="seller-avatar">
+          <image 
+            wx:if="{{item.sellerAvatar}}"
+            src="{{item.sellerAvatar}}"
+            class="avatar-img"
+          />
+          <view wx:else class="avatar-placeholder">
+            <t-icon name="user" size="24px" color="#94a3b8" />
+          </view>
+        </view>
         <view class="seller-details">
-          <view class="seller-name">{{item.sellerName}}</view>
-          <view class="seller-meta">
-            <text class="seller-badge">业主认证</text>
-            <text class="seller-response">当日响应</text>
-          </view>
+          <text class="seller-name">{{item.sellerName}}</text>
+          <text class="seller-desc">信用良好 · 已认证</text>
         </view>
-        <t-button 
-          class="contact-btn"
-          theme="outline" 
-          size="small"
-          bindtap="onContactSeller"
-        >
-          <t-icon name="chat" size="32rpx" />
-          私信
-        </t-button>
-      </view>
-      
-      <!-- 锁定信息 -->
-      <view wx:if="{{item.lockInfo}}" class="lock-info">
-        <view class="lock-user">
-          <t-icon name="user" size="32rpx" color="#0052d9" />
-          <text>当前锁定人：{{item.lockInfo.lockUserName}}</text>
-        </view>
-        <view class="lock-time">
-          <t-icon name="time" size="32rpx" color="#0052d9" />
-          <text>锁定截至：{{item.lockInfo.expireTime}}</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 锁定与支付信息 -->
-    <view class="payment-section">
-      <view class="section-title">锁定与支付</view>
-      <view class="payment-info">
-        <view class="payment-item">
-          <t-icon name="creditcard" size="32rpx" color="#0052d9" />
-          <text>支持微信支付 · 付款后 24 小时内完成线下交付</text>
-        </view>
-        <view class="payment-item">
-          <t-icon name="calendar" size="32rpx" color="#0052d9" />
-          <text>锁定超时将自动释放，系统会推送通知给关注用户</text>
-        </view>
-        <view class="payment-item">
-          <t-icon name="secure" size="32rpx" color="#0052d9" />
-          <text>支持售后争议仲裁，管理员可协助退款、对账等异常处理</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 订阅提醒 -->
-    <view class="subscription-section">
-      <view class="section-header">
-        <text class="section-title">订阅提醒</text>
-        <t-switch 
-          value="{{isSubscribed}}"
-          bindchange="onToggleSubscribe"
-        />
-      </view>
-      <view class="subscription-info">
-        <view class="subscription-item">
-          <t-icon name="notification" size="32rpx" color="#0052d9" />
-          <text>锁定释放时提醒</text>
-        </view>
-        <view class="subscription-item">
-          <t-icon name="check-circle" size="32rpx" color="#0052d9" />
-          <text>售出后提醒 & 关注类似商品</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 留言交流 -->
-    <view class="comments-section">
-      <view class="section-header">
-        <text class="section-title">留言交流</text>
-        <text class="view-all">全部</text>
-      </view>
-      
-      <!-- 留言列表 -->
-      <view class="comments-list">
-        <view wx:for="{{comments}}" wx:key="id" class="comment-item">
-          <view class="comment-header">
-            <image class="comment-avatar" src="{{item.userAvatar}}" />
-            <view class="comment-meta">
-              <text class="comment-name">{{item.userName}}</text>
-              <text wx:if="{{item.isSeller}}" class="comment-badge">卖家</text>
-              <text class="comment-time">{{item.createTime}}</text>
-            </view>
-          </view>
-          <text class="comment-content">{{item.content}}</text>
-        </view>
-      </view>
-      
-      <!-- 发送留言 -->
-      <view class="comment-input">
-        <t-input 
-          class="input-field"
-          placeholder="留言提问..."
-          value="{{commentInput}}"
-          bindinput="onCommentInput"
-        />
-        <t-button 
-          class="send-btn"
-          theme="primary" 
-          size="small"
-          bindtap="onSendComment"
-        >
-          发送
-        </t-button>
       </view>
     </view>
 
@@ -203,25 +111,44 @@
   </view>
 
   <!-- 底部操作栏 -->
-  <view class="bottom-bar">
-    <view class="action-buttons">
+  <view class="bottom-actions">
+    <view class="action-left">
+      <view class="action-item" bind:tap="onFollowItem">
+        <t-icon name="{{isFollowed ? 'heart-filled' : 'heart'}}" size="24px" color="{{isFollowed ? '#e34d59' : '#64748b'}}" />
+        <text class="action-text" style="color: {{isFollowed ? '#e34d59' : '#64748b'}}">
+          {{isFollowed ? '已关注' : '关注'}}
+        </text>
+      </view>
+      <view class="action-item" bind:tap="onShare">
+        <t-icon name="share" size="24px" color="#64748b" />
+        <text class="action-text">分享</text>
+      </view>
+    </view>
+    
+    <view class="action-right">
       <t-button 
-        class="contact-btn"
-        theme="default" 
-        variant="outline"
-        size="large"
-        bindtap="onContactSeller"
-      >
-        联系卖家
-      </t-button>
-      <t-button 
-        class="lock-btn"
+        wx:if="{{item.status === 'available' && !isLocked}}"
         theme="primary" 
         size="large"
-        bindtap="onLockAndPay"
-        disabled="{{item.status === 'sold' || item.status === 'locked'}}"
+        bind:tap="onLockItem"
       >
-        {{item.status === 'sold' ? '已售出' : item.status === 'locked' ? '已被锁定' : '锁定并支付'}}
+        立即锁定
+      </t-button>
+      <t-button 
+        wx:elif="{{isLocked}}"
+        theme="success" 
+        size="large"
+        disabled
+      >
+        已锁定
+      </t-button>
+      <t-button 
+        wx:else
+        theme="default" 
+        size="large"
+        bind:tap="onContactSeller"
+      >
+        联系卖家
       </t-button>
     </view>
   </view>

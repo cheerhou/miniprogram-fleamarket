@@ -93,10 +93,17 @@
           wx:for="{{items}}" 
           wx:key="id"
           bind:tap="onItemTap"
-          data-id="{{item.id}}"
+          data-id="{{item._id || item.id}}"
         >
           <view class="item-image {{item.status === 'sold' ? 'item-image-sold' : ''}}">
-            <text class="item-image-text">{{item.imageText}}</text>
+            <image 
+              wx:if="{{item.images && item.images.length > 0}}"
+              src="{{item.images[0]}}"
+              mode="aspectFill"
+              class="item-image-img"
+              lazy-load
+            />
+            <text wx:else class="item-image-text">{{item.imageText || '暂无图片'}}</text>
           </view>
           <view class="item-info">
             <view class="item-header">
