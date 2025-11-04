@@ -30,6 +30,22 @@ page {
   gap: 24rpx;
 }
 
+/* 搜索框容器 - 与首页保持一致的位置 */
+.search-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(50%);
+  padding: 0 32rpx;
+}
+
+.search-navbar-content {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
 .navbar-left {
   display: flex;
   align-items: center;
@@ -49,6 +65,25 @@ page {
 .back-btn:active {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(0.95);
+}
+
+.back-icon {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  color: #0052D9;
+}
+
+.clear-icon {
+  font-size: 24rpx;
+  color: #94a3b8;
+  font-weight: 300;
+  line-height: 1;
 }
 
 .search-container {

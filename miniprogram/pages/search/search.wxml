@@ -5,33 +5,39 @@
     <view class="navbar-content">
       <view class="navbar-left">
         <view class="back-btn" bind:tap="onBack">
-          <t-icon name="chevron-left" size="20px" color="#fff" />
+          <text class="back-icon">‹</text>
         </view>
       </view>
-      <view class="search-container">
-        <view class="search-box">
-          <t-icon name="search" size="18px" color="#0052D9" />
-          <input 
-            class="search-input" 
-            placeholder="搜索心仪的闲置宝贝"
-            value="{{searchKeyword}}"
-            bindinput="onSearchInput"
-            bindconfirm="onSearch"
-            focus="{{inputFocused}}"
-            bindfocus="onInputFocus"
-            bindblur="onInputBlur"
-          />
-          <view 
-            wx:if="{{searchKeyword}}" 
-            class="search-clear"
-            bind:tap="clearSearch"
-          >
-            <t-icon name="close" size="16px" color="#94a3b8" />
+    </view>
+    
+    <!-- 搜索框容器 - 与首页保持一致的位置 -->
+    <view class="search-wrapper">
+      <view class="search-navbar-content">
+        <view class="search-container">
+          <view class="search-box">
+            <text class="search-icon">🔍</text>
+            <input 
+              class="search-input" 
+              placeholder="搜索心仪的闲置宝贝"
+              value="{{searchKeyword}}"
+              bindinput="onSearchInput"
+              bindconfirm="onSearch"
+              focus="{{inputFocused}}"
+              bindfocus="onInputFocus"
+              bindblur="onInputBlur"
+            />
+            <view 
+              wx:if="{{searchKeyword}}" 
+              class="search-clear"
+              bind:tap="clearSearch"
+            >
+              <text class="clear-icon">×</text>
+            </view>
           </view>
         </view>
-      </view>
-      <view class="navbar-right">
-        <text class="search-btn" bind:tap="onSearch">搜索</text>
+        <view class="navbar-right">
+          <text class="search-btn" bind:tap="onSearch">搜索</text>
+        </view>
       </view>
     </view>
   </view>
