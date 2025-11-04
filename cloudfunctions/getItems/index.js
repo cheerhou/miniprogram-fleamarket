@@ -17,6 +17,7 @@ const MAX_LIMIT = 20
  * @param {string} event.category - 分类筛选
  * @param {string} event.status - 状态筛选
  * @param {string} event.keyword - 关键词搜索
+ * @param {string} event.sortBy - 排序方式：time(时间)、price(价格)
  * @returns {Object} 查询结果
  */
 exports.main = async (event, context) => {
@@ -25,7 +26,8 @@ exports.main = async (event, context) => {
     pageSize = MAX_LIMIT, 
     category, 
     status, 
-    keyword 
+    keyword,
+    sortBy = 'time'
   } = event
   
   try {
@@ -51,10 +53,18 @@ exports.main = async (event, context) => {
     // 计算跳过的数量
     const skip = (page - 1) * pageSize
     
+    // 构建查询
+    let query = db.collection('items').where(whereCondition)
+    
+    // 根据排序方式设置排序
+    if (sortBy === 'price') {
+      query = query.orderBy('price', 'asc') // 价格从低到高
+    } else {
+      query = query.orderBy('publishTime', 'desc') // 时间从新到旧
+    }
+    
     // 查询物品列表
-    const result = await db.collection('items')
-      .where(whereCondition)
-      .orderBy('publishTime', 'desc')
+    const result = await query
       .skip(skip)
       .limit(pageSize)
       .get()

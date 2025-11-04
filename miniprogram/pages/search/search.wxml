@@ -1,0 +1,221 @@
+<!--search.wxml-->
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="navbar-content">
+      <view class="navbar-left">
+        <view class="back-btn" bind:tap="onBack">
+          <t-icon name="chevron-left" size="20px" color="#fff" />
+        </view>
+      </view>
+      <view class="search-container">
+        <view class="search-box">
+          <t-icon name="search" size="18px" color="#0052D9" />
+          <input 
+            class="search-input" 
+            placeholder="搜索心仪的闲置宝贝"
+            value="{{searchKeyword}}"
+            bindinput="onSearchInput"
+            bindconfirm="onSearch"
+            focus="{{inputFocused}}"
+            bindfocus="onInputFocus"
+            bindblur="onInputBlur"
+          />
+          <view 
+            wx:if="{{searchKeyword}}" 
+            class="search-clear"
+            bind:tap="clearSearch"
+          >
+            <t-icon name="close" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+      <view class="navbar-right">
+        <text class="search-btn" bind:tap="onSearch">搜索</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 主内容区 -->
+  <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 搜索状态：初始状态 -->
+    <view wx:if="{{searchStatus === 'idle'}}" class="search-initial">
+      <!-- 搜索历史 -->
+      <view wx:if="{{searchHistory.length > 0}}" class="section">
+        <view class="section-header">
+          <text class="section-title">搜索历史</text>
+          <text class="section-link" bind:tap="clearHistory">清空</text>
+        </view>
+        <view class="history-tags">
+          <view 
+            class="history-tag" 
+            wx:for="{{searchHistory}}" 
+            wx:key="*this"
+            bind:tap="onHistoryTap"
+            data-keyword="{{item}}"
+          >
+            {{item}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 热门搜索 -->
+      <view class="section">
+        <view class="section-header">
+          <text class="section-title">热门搜索</text>
+        </view>
+        <view class="hot-tags">
+          <view 
+            class="hot-tag" 
+            wx:for="{{hotSearches}}" 
+            wx:key="*this"
+            bind:tap="onHotTap"
+            data-keyword="{{item}}"
+          >
+            {{item}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 搜索状态：搜索中 -->
+    <view wx:if="{{searchStatus === 'searching'}}" class="search-loading">
+      <t-loading theme="circular" size="40rpx" text="搜索中..." />
+    </view>
+
+    <!-- 搜索状态：无结果 -->
+    <view wx:if="{{searchStatus === 'empty'}}" class="search-empty">
+      <view class="empty-icon">
+        <t-icon name="search" size="64rpx" color="#94a3b8" />
+      </view>
+      <text class="empty-text">未找到相关物品</text>
+      <text class="empty-desc">试试其他关键词或浏览热门推荐</text>
+    </view>
+
+    <!-- 搜索状态：错误 -->
+    <view wx:if="{{searchStatus === 'error'}}" class="search-error">
+      <view class="error-icon">
+        <t-icon name="close-circle" size="64rpx" color="#f56565" />
+      </view>
+      <text class="error-text">搜索失败</text>
+      <text class="error-desc">{{errorMessage}}</text>
+      <t-button theme="primary" size="small" bind:tap="onRetry">重试</t-button>
+    </view>
+
+    <!-- 搜索状态：有结果 -->
+    <view wx:if="{{searchStatus === 'success'}}" class="search-results">
+      <view class="results-header">
+        <text class="results-count">找到 {{searchResults.length}} 个物品</text>
+        <view class="sort-options">
+          <text class="sort-label">排序：</text>
+          <view class="sort-tags">
+            <view 
+              class="sort-tag {{sortType === 'time' ? 'active' : ''}}"
+              bind:tap="onSortChange"
+              data-type="time"
+            >
+              最新
+            </view>
+            <view 
+              class="sort-tag {{sortType === 'price' ? 'active' : ''}}"
+              bind:tap="onSortChange"
+              data-type="price"
+            >
+              价格
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="item-list">
+        <view 
+          class="item-card" 
+          wx:for="{{searchResults}}" 
+          wx:key="id"
+          bind:tap="onItemTap"
+          data-id="{{item._id || item.id}}"
+        >
+          <view class="item-image {{item.status === 'sold' ? 'item-image-sold' : ''}}">
+            <image 
+              wx:if="{{item.images && item.images.length > 0}}"
+              src="{{item.images[0]}}"
+              mode="aspectFill"
+              class="item-image-img"
+              lazy-load
+            />
+            <text wx:else class="item-image-text">{{item.imageText || '暂无图片'}}</text>
+          </view>
+          <view class="item-info">
+            <view class="item-header">
+              <text class="item-title">{{item.title}}</text>
+              <t-tag 
+                theme="{{item.statusTheme}}" 
+                variant="light" 
+                size="small"
+              >
+                {{item.statusText}}
+              </t-tag>
+            </view>
+            <text class="item-desc">{{item.description}}</text>
+            
+            <view class="item-price-row">
+              <text class="item-price {{item.status === 'sold' ? 'item-price-sold' : ''}}">¥{{item.price}}</text>
+              <view class="item-stats">
+                <t-icon name="browse" size="14px" color="#94a3b8" />
+                <text class="item-stats-text">{{item.views}} 人关注</text>
+              </view>
+            </view>
+
+            <view class="item-footer">
+              <view class="item-footer-left">
+                <t-icon 
+                  name="{{item.footerIcon}}" 
+                  size="14px" 
+                  color="{{item.footerColor}}" 
+                />
+                <text class="item-footer-text" style="color: {{item.footerColor}}">
+                  {{item.footerText}}
+                </text>
+              </view>
+              <t-button 
+                wx:if="{{item.status === 'available'}}"
+                theme="primary" 
+                size="small"
+                variant="outline"
+                bind:tap="onLockItem"
+                data-id="{{item.id}}"
+              >
+                去锁定
+              </t-button>
+              <t-button 
+                wx:elif="{{item.status === 'locked'}}"
+                theme="default" 
+                size="small"
+                bind:tap="onFollowItem"
+                data-id="{{item.id}}"
+              >
+                关注
+              </t-button>
+              <text 
+                wx:else
+                class="item-link"
+                catch:tap="onViewDetail"
+                data-id="{{item.id}}"
+              >
+                查看详情
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view wx:if="{{hasMore}}" class="load-more">
+        <t-loading theme="circular" size="32rpx" text="加载更多..." />
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

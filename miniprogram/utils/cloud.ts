@@ -57,6 +57,7 @@ class CloudUtils {
     category?: string
     status?: string
     keyword?: string
+    sortBy?: string
   }): Promise<any> {
     return this.callFunction('getItems', params)
   }

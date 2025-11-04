@@ -89,6 +89,22 @@ page {
   color: #1f2937;
 }
 
+.search-clear {
+  padding: 8rpx;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.search-clear:active {
+  background: #e2e8f0;
+  transform: scale(0.95);
+}
+
 .search-btn {
   flex-shrink: 0;
 }

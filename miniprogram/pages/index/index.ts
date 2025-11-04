@@ -113,23 +113,44 @@ Page({
     this.setData({
       searchKeyword: e.detail.value
     })
+    
+    // 如果清空搜索框，自动加载完整列表
+    if (!e.detail.value.trim()) {
+      this.clearSearch()
+    }
   },
 
-  // 执行搜索
+  // 清除搜索
+  async clearSearch() {
+    this.setData({
+      searchKeyword: ''
+    })
+    
+    // 重新加载完整列表
+    await this.loadData()
+  },
+
+  // 执行搜索 - 跳转到搜索页面
   onSearch() {
     const { searchKeyword } = this.data
-    if (!searchKeyword.trim()) {
-      wx.showToast({
-        title: '请输入搜索关键词',
-        icon: 'none'
-      })
-      return
-    }
     
-    console.log('搜索:', searchKeyword)
-    wx.showToast({
-      title: '搜索功能开发中',
-      icon: 'none'
+    if (searchKeyword.trim()) {
+      // 如果有搜索关键词，传递到搜索页面
+      wx.navigateTo({
+        url: `/pages/search/search?keyword=${encodeURIComponent(searchKeyword.trim())}`
+      })
+    } else {
+      // 如果没有关键词，直接跳转到搜索页面
+      wx.navigateTo({
+        url: '/pages/search/search'
+      })
+    }
+  },
+
+  // 点击搜索框 - 跳转到搜索页面
+  onSearchBoxTap() {
+    wx.navigateTo({
+      url: '/pages/search/search'
     })
   },
 

@@ -18,14 +18,23 @@
     
     <!-- 搜索框 -->
     <view class="search-wrapper">
-      <view class="search-box">
+      <view class="search-box" bind:tap="onSearchBoxTap">
         <t-icon name="search" size="18px" color="#0052D9" />
         <input 
           class="search-input" 
           placeholder="搜索心仪的闲置宝贝"
           value="{{searchKeyword}}"
           bindinput="onSearchInput"
+          bindconfirm="onSearch"
+          bindtap="onSearchBoxTap"
         />
+        <view 
+          wx:if="{{searchKeyword}}" 
+          class="search-clear"
+          bind:tap="clearSearch"
+        >
+          <t-icon name="close" size="16px" color="#94a3b8" />
+        </view>
         <t-button 
           theme="primary" 
           size="small" 

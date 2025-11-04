@@ -1,10 +1,11 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/locks/locks",
+    "pages/search/search",
+    "pages/detail/detail",
     "pages/publish/publish",
     "pages/my/my",
-    "pages/detail/detail",
+    "pages/locks/locks",
     "pages/logs/logs"
   ],
   "window": {
