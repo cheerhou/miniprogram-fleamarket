@@ -238,7 +238,7 @@
     </view>
     <view class="tabbar-publish" bind:tap="onPublish">
       <view class="publish-btn">
-        <t-icon name="add" size="28px" color="#fff" />
+        <text class="add-icon">+</text>
       </view>
       <text class="tabbar-text">发布</text>
     </view>

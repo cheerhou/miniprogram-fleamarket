@@ -513,6 +513,13 @@ page {
   justify-content: center;
 }
 
+.add-icon {
+  color: #fff;
+  font-size: 48rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+
 .publish-btn:active {
   transform: scale(0.95);
 }
