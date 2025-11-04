@@ -3,41 +3,42 @@
   <!-- 自定义导航栏 -->
   <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
     <view class="navbar-content">
-      <view class="navbar-left">
-        <view class="back-btn" bind:tap="onBack">
-          <text class="back-icon">‹</text>
-        </view>
-      </view>
+      <!-- 空的导航栏内容，保持结构 -->
     </view>
-    
-    <!-- 搜索框容器 - 与首页保持一致的位置 -->
-    <view class="search-wrapper">
-      <view class="search-navbar-content">
-        <view class="search-container">
-          <view class="search-box">
-            <text class="search-icon">🔍</text>
-            <input 
-              class="search-input" 
-              placeholder="搜索心仪的闲置宝贝"
-              value="{{searchKeyword}}"
-              bindinput="onSearchInput"
-              bindconfirm="onSearch"
-              focus="{{inputFocused}}"
-              bindfocus="onInputFocus"
-              bindblur="onInputBlur"
-            />
-            <view 
-              wx:if="{{searchKeyword}}" 
-              class="search-clear"
-              bind:tap="clearSearch"
-            >
-              <text class="clear-icon">×</text>
-            </view>
-          </view>
+  </view>
+  
+  <!-- 搜索框容器 - 移到导航栏下方 -->
+  <view class="search-section">
+    <view class="search-navbar-content">
+      <view class="back-btn" catch:tap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="search-box">
+        <input 
+          class="search-input" 
+          placeholder="搜索心仪的闲置宝贝"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearch"
+          focus="{{inputFocused}}"
+          bindfocus="onInputFocus"
+          bindblur="onInputBlur"
+        />
+        <view 
+          wx:if="{{searchKeyword}}" 
+          class="search-clear"
+          bind:tap="clearSearch"
+        >
+          <text class="clear-icon">×</text>
         </view>
-        <view class="navbar-right">
-          <text class="search-btn" bind:tap="onSearch">搜索</text>
-        </view>
+        <t-button 
+          theme="primary" 
+          size="small" 
+          bind:tap="onSearch"
+          class="search-btn"
+        >
+          搜索
+        </t-button>
       </view>
     </view>
   </view>

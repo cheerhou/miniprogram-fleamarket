@@ -11,10 +11,10 @@ Page({
     searchKeyword: '',
     // 分类列表
     categories: [
-      { id: 1, name: '童趣', icon: 'gift' },
-      { id: 2, name: '数码', icon: 'mobile' },
-      { id: 3, name: '手作', icon: 'edit' },
-      { id: 4, name: '家居', icon: 'home' }
+      { _id: '1', name: '童趣', icon: 'gift' },
+      { _id: '2', name: '数码', icon: 'mobile' },
+      { _id: '3', name: '手作', icon: 'edit' },
+      { _id: '4', name: '家居', icon: 'home' }
     ],
     // 物品列表
     items: [
@@ -74,6 +74,7 @@ Page({
   onShow() {
     // 页面显示时刷新数据
     this.loadData()
+    this.loadCategories()
   },
 
   // 加载数据
@@ -105,6 +106,39 @@ Page({
       })
     } finally {
       wx.hideLoading()
+    }
+  },
+
+  // 加载分类数据
+  async loadCategories() {
+    try {
+      // 从云数据库获取分类列表
+      const result = await cloudUtils.getCategories({
+        type: 'all'
+      })
+      
+      if (result.success && result.data && result.data.list) {
+        this.setData({
+          categories: result.data.list
+        })
+        console.log('分类数据加载成功:', result.data.list)
+      } else {
+        throw new Error(result.message || '分类数据格式错误')
+      }
+      
+    } catch (error) {
+      console.error('加载分类失败:', error)
+      // 如果加载失败，使用默认分类数据
+      console.log('使用默认分类数据')
+      const defaultCategories = [
+        { _id: '1', name: '童趣', icon: 'gift' },
+        { _id: '2', name: '数码', icon: 'mobile' },
+        { _id: '3', name: '手作', icon: 'edit' },
+        { _id: '4', name: '家居', icon: 'home' }
+      ]
+      this.setData({
+        categories: defaultCategories
+      })
     }
   },
 
@@ -171,11 +205,36 @@ Page({
 
   // 点击分类
   onCategoryTap(e: any) {
-    const { id } = e.currentTarget.dataset
-    console.log('点击分类:', id)
-    wx.showToast({
-      title: '分类筛选开发中',
-      icon: 'none'
+    const { name } = e.currentTarget.dataset
+    console.log('点击分类:', name)
+    
+    if (!name) {
+      wx.showToast({
+        title: '分类名称不存在',
+        icon: 'none'
+      })
+      return
+    }
+    
+    // 显示加载提示
+    wx.showLoading({
+      title: '加载中...'
+    })
+    
+    // 跳转到分类筛选页面，传递分类名称
+    wx.navigateTo({
+      url: `/pages/category/category?categoryName=${encodeURIComponent(name)}`,
+      success: () => {
+        wx.hideLoading()
+      },
+      fail: (error) => {
+        wx.hideLoading()
+        console.error('跳转分类页面失败:', error)
+        wx.showToast({
+          title: '跳转失败，请重试',
+          icon: 'none'
+        })
+      }
     })
   },
 

@@ -34,6 +34,7 @@ exports.main = async (event, context) => {
     // 构建查询条件
     let whereCondition = {}
     
+    // 分类筛选（根据分类名称筛选）
     if (category && category !== '全部') {
       whereCondition.category = category
     }

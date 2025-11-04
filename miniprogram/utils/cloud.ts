@@ -71,6 +71,16 @@ class CloudUtils {
   }
 
   /**
+   * 获取分类列表
+   * @param params 查询参数
+   */
+  public async getCategories(params: {
+    type?: string
+  }): Promise<any> {
+    return this.callFunction('getCategories', params)
+  }
+
+  /**
    * 锁定物品
    * @param itemId 物品ID
    */

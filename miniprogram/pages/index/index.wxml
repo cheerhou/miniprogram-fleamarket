@@ -15,8 +15,10 @@
         </view>
       </view>
     </view>
-    
-    <!-- 搜索框 -->
+  </view>
+  
+  <!-- 搜索框区域 - 移到导航栏下方 -->
+  <view class="search-section">
     <view class="search-wrapper">
       <view class="search-box" bind:tap="onSearchBoxTap">
         <t-icon name="search" size="18px" color="#0052D9" />
@@ -78,9 +80,9 @@
         <view 
           class="category-item" 
           wx:for="{{categories}}" 
-          wx:key="id"
+          wx:key="_id"
           bind:tap="onCategoryTap"
-          data-id="{{item.id}}"
+          data-name="{{item.name}}"
         >
           <view class="category-icon">
             <t-icon name="{{item.icon}}" size="20px" color="#0052D9" />

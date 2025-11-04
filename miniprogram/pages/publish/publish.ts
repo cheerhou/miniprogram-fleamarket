@@ -8,7 +8,7 @@ Page({
     description: '',
     price: '',
     condition: '9成新',
-    category: '家居',
+    category: '家居', // 存储分类名称
     location: '',
     images: [] as string[],
     
@@ -89,8 +89,9 @@ Page({
   // 分类选择
   onCategoryChange(e: any) {
     const { value } = e.detail
+    const selectedCategory = this.data.categoryOptions[value]
     this.setData({
-      category: this.data.categoryOptions[value].value,
+      category: selectedCategory.value, // 存储分类名称
       categoryPickerValue: [value]
     })
   },
@@ -230,7 +231,7 @@ Page({
         description,
         price,
         condition,
-        category,
+        category, // 分类ID（用于筛选和显示）
         location,
         images: uploadResult.data?.map((item: any) => item.fileID) || []
       }
@@ -352,13 +353,13 @@ Page({
       return
     }
 
-    // TODO: 保存到本地存储或云数据库
+    // 保存到本地存储
     wx.setStorageSync('publish_draft', {
       title,
       description,
       price,
       condition,
-      category,
+      category, // 保存分类名称
       location,
       images,
       savedAt: new Date().toISOString()
@@ -380,12 +381,18 @@ Page({
           content: '是否加载上次保存的草稿？',
           success: (res) => {
             if (res.confirm) {
+              // 根据分类名称找到对应的选项索引
+              const categoryIndex = this.data.categoryOptions.findIndex(
+                option => option.value === draft.category
+              )
+              
               this.setData({
                 title: draft.title || '',
                 description: draft.description || '',
                 price: draft.price || '',
                 condition: draft.condition || '9成新',
-                category: draft.category || '数码',
+                category: draft.category || '家居', // 分类名称
+                categoryPickerValue: [categoryIndex >= 0 ? categoryIndex : 0],
                 location: draft.location || '',
                 images: draft.images || []
               })
