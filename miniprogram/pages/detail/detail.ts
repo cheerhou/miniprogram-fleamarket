@@ -235,17 +235,20 @@ Page({
         title: '锁定中...'
       })
 
-      // TODO: 调用云函数锁定物品
-      console.log('锁定物品:', this.data.itemId)
+      const result = await cloudUtils.lockItem(this.data.itemId)
 
-      this.setData({
-        isLocked: true
-      })
+      if (result.success) {
+        this.setData({
+          isLocked: true
+        })
 
-      wx.showToast({
-        title: '锁定成功',
-        icon: 'success'
-      })
+        wx.showToast({
+          title: '锁定成功',
+          icon: 'success'
+        })
+      } else {
+        throw new Error(result.message)
+      }
 
     } catch (error) {
       console.error('锁定失败:', error)
@@ -258,9 +261,18 @@ Page({
     }
   },
 
-  // 关注物品
+  // 关注物品（订阅）
   onFollowItem() {
-    const { isFollowed } = this.data
+    const { item, isFollowed } = this.data
+    
+    // 只有锁定的物品才能订阅
+    if (item && item.status !== 'locked') {
+      wx.showToast({
+        title: '只能订阅已锁定的物品',
+        icon: 'none'
+      })
+      return
+    }
     
     if (isFollowed) {
       this.unfollowItem()
@@ -269,47 +281,53 @@ Page({
     }
   },
 
-  // 关注
+  // 关注（订阅）
   async followItem() {
     try {
-      // TODO: 调用云函数关注物品
-      console.log('关注物品:', this.data.itemId)
+      const result = await cloudUtils.subscribeItem(this.data.itemId, ['item_released', 'item_sold'])
+      
+      if (result.success) {
+        this.setData({
+          isFollowed: true
+        })
 
-      this.setData({
-        isFollowed: true
-      })
-
-      wx.showToast({
-        title: '关注成功',
-        icon: 'success'
-      })
+        wx.showToast({
+          title: '订阅成功',
+          icon: 'success'
+        })
+      } else {
+        throw new Error(result.message)
+      }
 
     } catch (error) {
-      console.error('关注失败:', error)
+      console.error('订阅失败:', error)
       wx.showToast({
-        title: '关注失败，请重试',
+        title: '订阅失败，请重试',
         icon: 'none'
       })
     }
   },
 
-  // 取消关注
+  // 取消关注（取消订阅）
   async unfollowItem() {
     try {
-      // TODO: 调用云函数取消关注
-      console.log('取消关注物品:', this.data.itemId)
+      const result = await cloudUtils.unsubscribeItem(this.data.itemId)
+      
+      if (result.success) {
+        this.setData({
+          isFollowed: false
+        })
 
-      this.setData({
-        isFollowed: false
-      })
-
-      wx.showToast({
-        title: '已取消关注',
-        icon: 'success'
-      })
+        wx.showToast({
+          title: '已取消订阅',
+          icon: 'success'
+        })
+      } else {
+        throw new Error(result.message)
+      }
 
     } catch (error) {
-      console.error('取消关注失败:', error)
+      console.error('取消订阅失败:', error)
       wx.showToast({
         title: '操作失败，请重试',
         icon: 'none'

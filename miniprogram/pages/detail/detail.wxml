@@ -113,10 +113,10 @@
   <!-- 底部操作栏 -->
   <view class="bottom-actions">
     <view class="action-left">
-      <view class="action-item" bind:tap="onFollowItem">
+      <view wx:if="{{item.status === 'locked'}}" class="action-item" bind:tap="onFollowItem">
         <t-icon name="{{isFollowed ? 'heart-filled' : 'heart'}}" size="24px" color="{{isFollowed ? '#e34d59' : '#64748b'}}" />
         <text class="action-text" style="color: {{isFollowed ? '#e34d59' : '#64748b'}}">
-          {{isFollowed ? '已关注' : '关注'}}
+          {{isFollowed ? '已订阅' : '订阅'}}
         </text>
       </view>
       <view class="action-item" bind:tap="onShare">

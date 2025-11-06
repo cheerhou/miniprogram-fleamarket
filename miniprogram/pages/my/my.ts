@@ -69,7 +69,7 @@ Page({
         value: '3',
         icon: 'notification',
         color: 'brand',
-        url: '',
+        url: '/pages/notifications/notifications',
       },
     ],
     lockingOrder: <LockingOrder>{

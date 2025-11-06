@@ -190,9 +190,8 @@ Page({
 
   // 点击通知
   onNotification() {
-    wx.showToast({
-      title: '通知中心开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/notifications/notifications'
     })
   },
 
@@ -258,8 +257,17 @@ Page({
 
   // 锁定物品
   onLockItem(e: any) {
-    e.stopPropagation()
     const { id } = e.currentTarget.dataset
+    console.log('onLockItem - 获取到的ID:', id)
+    console.log('onLockItem - 完整dataset:', e.currentTarget.dataset)
+    
+    if (!id) {
+      wx.showToast({
+        title: '物品ID不存在',
+        icon: 'none'
+      })
+      return
+    }
     
     wx.showModal({
       title: '确认锁定',
@@ -267,20 +275,48 @@ Page({
       confirmText: '确认锁定',
       success: (res) => {
         if (res.confirm) {
-          console.log('锁定物品:', id)
-          wx.showToast({
-            title: '锁定成功',
-            icon: 'success'
-          })
-          // TODO: 调用云函数锁定物品
+          this.lockItem(id)
         }
       }
     })
   },
 
+  // 执行锁定
+  async lockItem(id: string) {
+    console.log('准备锁定物品，ID:', id)
+    
+    try {
+      wx.showLoading({
+        title: '锁定中...'
+      })
+
+      const result = await cloudUtils.lockItem(id)
+      console.log('锁定结果:', result)
+
+      if (result.success) {
+        wx.showToast({
+          title: '锁定成功',
+          icon: 'success'
+        })
+        // 刷新数据
+        this.loadData()
+      } else {
+        throw new Error(result.message)
+      }
+
+    } catch (error) {
+      console.error('锁定失败:', error)
+      wx.showToast({
+        title: '锁定失败，请重试',
+        icon: 'none'
+      })
+    } finally {
+      wx.hideLoading()
+    }
+  },
+
   // 关注物品
   onFollowItem(e: any) {
-    e.stopPropagation()
     const { id } = e.currentTarget.dataset
     console.log('关注物品:', id)
     wx.showToast({
@@ -292,7 +328,6 @@ Page({
 
   // 查看详情
   onViewDetail(e: any) {
-    e.stopPropagation()
     const { id } = e.currentTarget.dataset
     console.log('查看详情:', id)
     wx.showToast({
@@ -303,17 +338,15 @@ Page({
 
   // 订阅提醒
   onSubscribe() {
-    wx.showToast({
-      title: '订阅功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/notifications/notifications'
     })
   },
 
   // 管理订阅
   onManageSubscriptions() {
-    wx.showToast({
-      title: '订阅管理开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/notifications/notifications'
     })
   },
 

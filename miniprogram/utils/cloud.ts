@@ -91,9 +91,10 @@ class CloudUtils {
   /**
    * 取消锁定
    * @param itemId 物品ID
+   * @param action 操作类型：release（释放）或 sell（售出）
    */
-  public async unlockItem(itemId: string): Promise<any> {
-    return this.callFunction('unlockItem', { itemId })
+  public async unlockItem(itemId: string, action: 'release' | 'sell'): Promise<any> {
+    return this.callFunction('unlockItem', { itemId, action })
   }
 
   /**
@@ -143,6 +144,43 @@ class CloudUtils {
    */
   public async unsubscribeItem(itemId: string): Promise<any> {
     return this.callFunction('unsubscribeItem', { itemId })
+  }
+
+  /**
+   * 获取用户通知列表
+   * @param params 查询参数
+   */
+  public async getUserNotifications(params: {
+    page?: number
+    pageSize?: number
+    type?: string
+    isRead?: string
+  }): Promise<any> {
+    return this.callFunction('getUserNotifications', params)
+  }
+
+  /**
+   * 标记通知已读
+   * @param params 参数
+   */
+  public async markNotificationRead(params: {
+    notificationId?: string
+    markAll?: boolean
+  }): Promise<any> {
+    return this.callFunction('markNotificationRead', params)
+  }
+
+  /**
+   * 发送物品通知
+   * @param params 参数
+   */
+  public async sendItemNotification(params: {
+    itemId: string
+    type: string
+    actorId: string
+    actorName?: string
+  }): Promise<any> {
+    return this.callFunction('sendItemNotification', params)
   }
 }
 

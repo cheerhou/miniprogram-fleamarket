@@ -1,0 +1,125 @@
+<!--notifications.wxml-->
+<view class="page">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="navbar-content">
+      <view class="navbar-left">
+        <view class="back-btn" bind:tap="onBack">
+          <t-icon name="chevron-left" size="20px" color="#fff" />
+        </view>
+      </view>
+      <view class="navbar-title">
+        <text class="title-text">通知中心</text>
+        <view wx:if="{{unreadCount > 0}}" class="unread-badge">{{unreadCount}}</view>
+      </view>
+      <view class="navbar-right">
+        <view class="action-btn" bind:tap="onMarkAllRead">
+          <text>全部已读</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 筛选标签 -->
+  <view class="filter-tabs">
+    <view 
+      class="filter-tab {{currentType === '' ? 'active' : ''}}"
+      bind:tap="onFilterChange"
+      data-type=""
+    >
+      <text>全部</text>
+      <view wx:if="{{typeCount.all > 0}}" class="tab-count">{{typeCount.all}}</view>
+    </view>
+    <view 
+      class="filter-tab {{currentType === 'item_released' ? 'active' : ''}}"
+      bind:tap="onFilterChange"
+      data-type="item_released"
+    >
+      <text>物品释放</text>
+      <view wx:if="{{typeCount.released > 0}}" class="tab-count">{{typeCount.released}}</view>
+    </view>
+    <view 
+      class="filter-tab {{currentType === 'item_sold' ? 'active' : ''}}"
+      bind:tap="onFilterChange"
+      data-type="item_sold"
+    >
+      <text>物品售出</text>
+      <view wx:if="{{typeCount.sold > 0}}" class="tab-count">{{typeCount.sold}}</view>
+    </view>
+  </view>
+
+  <!-- 主内容区 -->
+  <scroll-view 
+    class="main-content" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    bind:scrolltolower="onLoadMore"
+  >
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{loading && notifications.length === 0}}">
+      <t-loading theme="circular" size="40rpx" text="加载中..." />
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-container" wx:if="{{!loading && notifications.length === 0}}">
+      <t-icon name="notification" size="64rpx" color="#94a3b8" />
+      <text class="empty-text">暂无通知</text>
+      <text class="empty-desc">关注物品后，状态变化时会收到通知</text>
+    </view>
+
+    <!-- 通知列表 -->
+    <view class="notification-list" wx:if="{{notifications.length > 0}}">
+      <view 
+        class="notification-item {{!item.isRead ? 'unread' : ''}}"
+        wx:for="{{notifications}}" 
+        wx:key="_id"
+        bind:tap="onNotificationTap"
+        data-id="{{item._id}}"
+        data-item-id="{{item.itemId}}"
+      >
+        <view class="notification-icon">
+          <t-icon 
+            name="{{item.type === 'item_released' ? 'refresh' : 'close-circle'}}" 
+            size="20px" 
+            color="{{item.type === 'item_released' ? '#2BA471' : '#E34D59'}}" 
+          />
+        </view>
+        <view class="notification-content">
+          <view class="notification-header">
+            <text class="notification-title">{{item.title}}</text>
+            <text class="notification-time">{{item.createTime}}</text>
+          </view>
+          <text class="notification-desc">{{item.content}}</text>
+          <view wx:if="{{item.item}}" class="notification-item">
+            <image 
+              wx:if="{{item.item.images && item.item.images.length > 0}}"
+              src="{{item.item.images[0]}}"
+              mode="aspectFill"
+              class="item-image"
+            />
+            <view class="item-info">
+              <text class="item-title">{{item.item.title}}</text>
+              <text class="item-price">¥{{item.item.price}}</text>
+            </view>
+          </view>
+          <view class="notification-footer">
+            <text class="actor-name">{{item.actorName}}</text>
+            <view wx:if="{{!item.isRead}}" class="unread-dot"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{notifications.length > 0}}">
+      <view wx:if="{{loadingMore}}">
+        <t-loading theme="circular" size="32rpx" text="加载更多..." />
+      </view>
+      <text wx:elif="{{!hasMore}}" class="no-more">没有更多了</text>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

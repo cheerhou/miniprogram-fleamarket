@@ -153,8 +153,8 @@
                 theme="primary" 
                 size="small"
                 variant="outline"
-                bind:tap="onLockItem"
-                data-id="{{item.id}}"
+                catch:tap="onLockItem"
+                data-id="{{item._id || item.id}}"
               >
                 去锁定
               </t-button>
@@ -162,8 +162,8 @@
                 wx:elif="{{item.status === 'locked'}}"
                 theme="default" 
                 size="small"
-                bind:tap="onFollowItem"
-                data-id="{{item.id}}"
+                catch:tap="onFollowItem"
+                data-id="{{item._id || item.id}}"
               >
                 关注
               </t-button>
@@ -171,7 +171,7 @@
                 wx:else
                 class="item-link"
                 catch:tap="onViewDetail"
-                data-id="{{item.id}}"
+                data-id="{{item._id || item.id}}"
               >
                 查看详情
               </text>
@@ -204,7 +204,7 @@
             <text class="subscription-title">链家小家电专题</text>
             <text class="subscription-desc">每周精选小家电限时优惠速递</text>
           </view>
-          <text class="subscription-link" bind:tap="onEditSubscription">编辑</text>
+          <text class="section-link" bind:tap="onEditSubscription">编辑</text>
         </view>
       </view>
     </view>
