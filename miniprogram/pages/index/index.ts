@@ -97,7 +97,9 @@ Page({
         const items = (result.data.list || []).map((item: any) => ({
           ...item,
           footerIcon: this.validateIcon(item.footerIcon) || 'time', // 默认图标
-          footerColor: item.footerColor || '#0052D9' // 默认颜色
+          footerColor: item.footerColor || '#0052D9', // 默认颜色
+          statusText: this.getStatusText(item.status), // 根据状态生成状态文本
+          statusTheme: this.getStatusTheme(item.status) // 根据状态生成主题
         }))
         this.setData({
           items
@@ -115,6 +117,26 @@ Page({
     } finally {
       wx.hideLoading()
     }
+  },
+
+  // 根据状态获取状态文本
+  getStatusText(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'available': '待出售',
+      'locked': '已锁定',
+      'sold': '已售出'
+    }
+    return statusMap[status] || '待出售'
+  },
+
+  // 根据状态获取主题
+  getStatusTheme(status: string): string {
+    const themeMap: { [key: string]: string } = {
+      'available': 'success',
+      'locked': 'warning',
+      'sold': 'danger'
+    }
+    return themeMap[status] || 'success'
   },
 
   // 验证图标名称是否有效

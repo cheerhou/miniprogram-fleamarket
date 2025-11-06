@@ -100,7 +100,6 @@
     <view class="section">
       <view class="section-header">
         <text class="section-title">最新上架</text>
-        <text class="section-link" bind:tap="onSubscribe">订阅提醒</text>
       </view>
       <view class="item-list">
         <!-- 有数据时显示物品列表 -->
@@ -138,7 +137,7 @@
               <text class="item-price {{item.status === 'sold' ? 'item-price-sold' : ''}}">¥{{item.price}}</text>
               <view class="item-stats">
                 <t-icon name="browse" size="14px" color="#94a3b8" />
-                <text class="item-stats-text">{{item.views}} 人关注</text>
+                <text class="item-stats-text">{{item.viewCount}} 人关注</text>
               </view>
             </view>
 
@@ -161,7 +160,7 @@
                 catch:tap="onLockItem"
                 data-id="{{item._id || item.id}}"
               >
-                去锁定
+                锁定
               </t-button>
               <t-button 
                 wx:elif="{{item.status === 'locked'}}"
@@ -172,14 +171,6 @@
               >
                 关注
               </t-button>
-              <text 
-                wx:else
-                class="item-link"
-                catch:tap="onViewDetail"
-                data-id="{{item._id || item.id}}"
-              >
-                查看详情
-              </text>
             </view>
           </view>
         </view>
