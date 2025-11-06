@@ -99,6 +99,7 @@
         <text class="section-link" bind:tap="onSubscribe">订阅提醒</text>
       </view>
       <view class="item-list">
+        <!-- 有数据时显示物品列表 -->
         <view 
           class="item-card" 
           wx:for="{{items}}" 
@@ -177,6 +178,21 @@
               </text>
             </view>
           </view>
+        </view>
+        
+        <!-- 无数据时显示空状态 -->
+        <view wx:if="{{items.length === 0}}" class="empty-state">
+          <t-icon name="shop" size="48px" color="#d1d5db" />
+          <text class="empty-text">暂无发布的新品</text>
+          <text class="empty-desc">快去发布你的第一件闲置宝贝吧</text>
+          <t-button 
+            theme="primary" 
+            size="medium"
+            bind:tap="onPublish"
+            class="empty-btn"
+          >
+            发布闲置
+          </t-button>
         </view>
       </view>
     </view>
