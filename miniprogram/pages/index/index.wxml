@@ -85,7 +85,11 @@
           data-name="{{item.name}}"
         >
           <view class="category-icon">
-            <t-icon name="{{item.icon}}" size="20px" color="#0052D9" />
+            <image 
+              src="{{item.icon}}" 
+              class="category-icon-img"
+              mode="aspectFit"
+            />
           </view>
           <text class="category-name">{{item.name}}</text>
         </view>

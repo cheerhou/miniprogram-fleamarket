@@ -11,10 +11,12 @@ Page({
     searchKeyword: '',
     // 分类列表
     categories: [
-      { _id: '1', name: '童趣', icon: 'gift' },
-      { _id: '2', name: '数码', icon: 'mobile' },
-      { _id: '3', name: '手作', icon: 'edit' },
-      { _id: '4', name: '家居', icon: 'home' }
+      { _id: '1', name: '童趣', icon: '/resources/icon/tongqu.svg' },
+      { _id: '2', name: '数码', icon: '/resources/icon/shumaxiangji.svg' },
+      { _id: '3', name: '家居', icon: '/resources/icon/jiaju.svg' },
+      { _id: '4', name: '运动', icon: '/resources/icon/yundong.svg' },
+      { _id: '5', name: '图书', icon: '/resources/icon/tushu.svg' },
+      { _id: '6', name: '其他', icon: '/resources/icon/qita.svg' }
     ],
     // 物品列表
     items: [
@@ -91,8 +93,14 @@ Page({
       })
       
       if (result.success) {
+        // 确保数据格式正确，过滤掉无效的图标
+        const items = (result.data.list || []).map((item: any) => ({
+          ...item,
+          footerIcon: this.validateIcon(item.footerIcon) || 'time', // 默认图标
+          footerColor: item.footerColor || '#0052D9' // 默认颜色
+        }))
         this.setData({
-          items: result.data.list
+          items
         })
       } else {
         throw new Error(result.message)
@@ -109,6 +117,30 @@ Page({
     }
   },
 
+  // 验证图标名称是否有效
+  validateIcon(iconName: string): string {
+    // 有效的 TDesign 图标列表
+    const validIcons = [
+      'time', 'check-circle', 'chat', 'browse', 'location', 
+      'notification', 'search', 'close', 'home', 'user', 
+      'view-list', 'chart', 'heart', 'mail', 'lightbulb', 
+      'error-circle', 'shop', 'edit', 'mobile', 'gift'
+    ]
+    
+    // 如果是有效的图标名称，直接返回
+    if (validIcons.includes(iconName)) {
+      return iconName
+    }
+    
+    // 如果是图片路径（包含 / 或 .），验证路径是否存在
+    if (iconName && (iconName.includes('/') || iconName.includes('.'))) {
+      return iconName
+    }
+    
+    // 默认返回 time 图标
+    return 'time'
+  },
+
   // 加载分类数据
   async loadCategories() {
     try {
@@ -118,10 +150,16 @@ Page({
       })
       
       if (result.success && result.data && result.data.list) {
+        // 验证分类图标路径
+        const categories = result.data.list.map((category: any) => ({
+          ...category,
+          icon: this.validateCategoryIcon(category.icon, category.name)
+        }))
+        
         this.setData({
-          categories: result.data.list
+          categories
         })
-        console.log('分类数据加载成功:', result.data.list)
+        console.log('分类数据加载成功:', categories)
       } else {
         throw new Error(result.message || '分类数据格式错误')
       }
@@ -131,15 +169,38 @@ Page({
       // 如果加载失败，使用默认分类数据
       console.log('使用默认分类数据')
       const defaultCategories = [
-        { _id: '1', name: '童趣', icon: 'gift' },
-        { _id: '2', name: '数码', icon: 'mobile' },
-        { _id: '3', name: '手作', icon: 'edit' },
-        { _id: '4', name: '家居', icon: 'home' }
+        { _id: '1', name: '童趣', icon: '/resources/icon/tongqu.svg' },
+        { _id: '2', name: '数码', icon: '/resources/icon/shumaxiangji.svg' },
+        { _id: '3', name: '家居', icon: '/resources/icon/jiaju.svg' },
+        { _id: '4', name: '运动', icon: '/resources/icon/yundong.svg' },
+        { _id: '5', name: '图书', icon: '/resources/icon/tushu.svg' },
+        { _id: '6', name: '其他', icon: '/resources/icon/qita.svg' }
       ]
       this.setData({
         categories: defaultCategories
       })
     }
+  },
+
+  // 验证分类图标路径
+  validateCategoryIcon(iconPath: string, categoryName: string): string {
+    // 根据分类名称返回对应的默认图标
+    const iconMap: { [key: string]: string } = {
+      '童趣': '/resources/icon/tongqu.svg',
+      '数码': '/resources/icon/shumaxiangji.svg',
+      '家居': '/resources/icon/jiaju.svg',
+      '运动': '/resources/icon/yundong.svg',
+      '图书': '/resources/icon/tushu.svg',
+      '其他': '/resources/icon/qita.svg'
+    }
+    
+    // 如果图标路径存在且是有效的 SVG 路径，直接返回
+    if (iconPath && iconPath.trim() && iconPath.includes('.svg')) {
+      return iconPath
+    }
+    
+    // 否则根据分类名称返回默认图标
+    return iconMap[categoryName] || '/resources/icon/tongqu.svg'
   },
 
   // 搜索输入
