@@ -86,7 +86,7 @@
             <text class="item-price {{item.status === 'sold' ? 'item-price-sold' : ''}}">¥{{item.price}}</text>
             <view class="item-stats">
               <t-icon name="browse" size="14px" color="#94a3b8" />
-              <text class="item-stats-text">{{item.views}} 人关注</text>
+              <text class="item-stats-text">{{item.viewCount || 0}} 人关注</text>
             </view>
           </view>
 

@@ -23,7 +23,7 @@ interface Item {
   status: string
   statusText: string
   statusTheme: string
-  views: number
+  viewCount: number
   footerIcon: string
   footerText: string
   footerColor: string
@@ -103,6 +103,50 @@ Page({
     return iconMap[categoryName] || '/resources/icon/tongqu.svg'
   },
 
+  // 根据状态获取状态文本
+  getStatusText(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'available': '待出售',
+      'locked': '已锁定',
+      'sold': '已售出'
+    }
+    return statusMap[status] || '待出售'
+  },
+
+  // 根据状态获取主题
+  getStatusTheme(status: string): string {
+    const themeMap: { [key: string]: string } = {
+      'available': 'success',
+      'locked': 'warning',
+      'sold': 'danger'
+    }
+    return themeMap[status] || 'success'
+  },
+
+  // 验证图标名称是否有效
+  validateIcon(iconName: string): string {
+    // 有效的 TDesign 图标列表
+    const validIcons = [
+      'time', 'check-circle', 'chat', 'browse', 'location',
+      'notification', 'search', 'close', 'home', 'user',
+      'view-list', 'chart', 'heart', 'mail', 'lightbulb',
+      'error-circle', 'shop', 'edit', 'mobile', 'gift'
+    ]
+
+    // 如果是有效的图标名称，直接返回
+    if (validIcons.includes(iconName)) {
+      return iconName
+    }
+
+    // 如果是图片路径（包含 / 或 .），验证路径是否存在
+    if (iconName && (iconName.includes('/') || iconName.includes('.'))) {
+      return iconName
+    }
+
+    // 默认返回 time 图标
+    return 'time'
+  },
+
   onShow() {
     // 页面显示时刷新数据
     if (this.data.categoryName) {
@@ -113,10 +157,10 @@ Page({
   // 加载物品列表
   async loadItems(reset = false) {
     if (this.data.loading || this.data.loadingMore) return
-    
+
     try {
       const { page, pageSize, categoryName, sortBy } = this.data
-      
+
       // 重置分页
       if (reset) {
         this.setData({
@@ -125,14 +169,14 @@ Page({
           hasMore: true
         })
       }
-      
+
       // 设置加载状态
       if (page === 1) {
         this.setData({ loading: true })
       } else {
         this.setData({ loadingMore: true })
       }
-      
+
       // 调用云函数获取物品列表
       const result = await cloudUtils.getItems({
         page: reset ? 1 : page,
@@ -140,27 +184,36 @@ Page({
         category: categoryName, // 使用分类名称筛选
         sortBy
       })
-      
+
       if (result.success) {
         const { list, hasMore } = result.data
-        
+
         // 移除调试日志，保持代码简洁
-        
+
+        // 格式化数据
+        const items = list.map((item: any) => ({
+          ...item,
+          footerIcon: this.validateIcon(item.footerIcon) || 'time',
+          footerColor: item.footerColor || '#0052D9',
+          statusText: this.getStatusText(item.status),
+          statusTheme: this.getStatusTheme(item.status)
+        }))
+
         if (reset || page === 1) {
           this.setData({
-            items: list,
+            items,
             hasMore
           })
         } else {
           this.setData({
-            items: [...this.data.items, ...list],
+            items: [...this.data.items, ...items],
             hasMore
           })
         }
       } else {
         throw new Error(result.message)
       }
-      
+
     } catch (error) {
       console.error('加载物品列表失败:', error)
       wx.showToast({
@@ -203,7 +256,7 @@ Page({
   // 点击物品卡片
   onItemTap(e: any) {
     const { id } = e.currentTarget.dataset
-    
+
     if (!id) {
       wx.showToast({
         title: '物品ID不存在',
@@ -211,7 +264,7 @@ Page({
       })
       return
     }
-    
+
     wx.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
@@ -221,7 +274,7 @@ Page({
   onLockItem(e: any) {
     e.stopPropagation()
     const { id } = e.currentTarget.dataset
-    
+
     wx.showModal({
       title: '确认锁定',
       content: '锁定后将为您保留 12 小时，请在锁定期内完成支付',
