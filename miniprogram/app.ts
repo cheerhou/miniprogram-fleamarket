@@ -1,4 +1,12 @@
 // app.ts
+interface IAppOption {
+  globalData: {
+    userInfo?: WechatMiniprogram.UserInfo,
+  }
+  userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback,
+  checkUserStatus: () => void
+}
+
 App<IAppOption>({
   globalData: {},
   onLaunch() {
@@ -23,7 +31,30 @@ App<IAppOption>({
       success: res => {
         console.log(res.code)
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+
+        // 检查用户注册状态
+        this.checkUserStatus()
       },
     })
+  },
+
+  async checkUserStatus() {
+    try {
+      const cloudUtils = require('./utils/cloud').default
+      const result = await cloudUtils.getUserInfo()
+
+      // 如果是新用户（isNew为true）或获取失败，跳转到注册页
+      if (result.isNew) {
+        wx.reLaunch({
+          url: '/pages/register/register'
+        })
+      }
+    } catch (error) {
+      console.error('检查用户状态失败:', error)
+      // 失败时也跳转注册页，确保安全
+      wx.reLaunch({
+        url: '/pages/register/register'
+      })
+    }
   },
 })

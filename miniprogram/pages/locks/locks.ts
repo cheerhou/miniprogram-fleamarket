@@ -1,4 +1,5 @@
-// miniprogram/pages/locks/locks.ts
+import cloudUtils from '../../utils/cloud'
+
 Page({
   data: {
     activeTab: 0,
@@ -108,13 +109,34 @@ Page({
       title: '取消锁定',
       content: '确定要取消锁定吗？取消后物品将重新上架。',
       confirmColor: '#E34D59',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          wx.showToast({
-            title: '已取消锁定',
-            icon: 'success'
-          })
-          // TODO: 调用云函数取消锁定
+          try {
+            wx.showLoading({
+              title: '处理中...',
+            })
+
+            const result = await cloudUtils.unlockItem(id, 'release')
+
+            if (result.success) {
+              wx.showToast({
+                title: '已取消锁定',
+                icon: 'success'
+              })
+              // 刷新列表
+              // this.loadLocks() // TODO: 实现加载列表功能
+            } else {
+              throw new Error(result.message)
+            }
+          } catch (error) {
+            console.error('取消锁定失败:', error)
+            wx.showToast({
+              title: '操作失败，请重试',
+              icon: 'none'
+            })
+          } finally {
+            wx.hideLoading()
+          }
         }
       }
     })

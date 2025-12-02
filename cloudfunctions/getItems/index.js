@@ -21,28 +21,28 @@ const MAX_LIMIT = 20
  * @returns {Object} 查询结果
  */
 exports.main = async (event, context) => {
-  const { 
-    page = 1, 
-    pageSize = MAX_LIMIT, 
-    category, 
-    status, 
+  const {
+    page = 1,
+    pageSize = MAX_LIMIT,
+    category,
+    status,
     keyword,
     sortBy = 'time'
   } = event
-  
+
   try {
     // 构建查询条件
     let whereCondition = {}
-    
+
     // 分类筛选（根据分类名称筛选）
     if (category && category !== '全部') {
       whereCondition.category = category
     }
-    
+
     if (status) {
       whereCondition.status = status
     }
-    
+
     if (keyword && keyword.trim()) {
       // 使用正则表达式进行模糊搜索
       whereCondition.title = db.RegExp({
@@ -50,31 +50,45 @@ exports.main = async (event, context) => {
         options: 'i' // 不区分大小写
       })
     }
-    
+
+    // 用户相关筛选
+    const wxContext = cloud.getWXContext()
+    const openid = wxContext.OPENID
+
+    if (event.filter === 'published') {
+      whereCondition._openid = openid
+    } else if (event.filter === 'locked') {
+      whereCondition.lockedBy = openid
+      whereCondition.status = 'locked'
+    } else if (event.filter === 'bought') {
+      whereCondition.buyerId = openid
+      whereCondition.status = 'sold'
+    }
+
     // 计算跳过的数量
     const skip = (page - 1) * pageSize
-    
+
     // 构建查询
     let query = db.collection('items').where(whereCondition)
-    
+
     // 根据排序方式设置排序
     if (sortBy === 'price') {
       query = query.orderBy('price', 'asc') // 价格从低到高
     } else {
       query = query.orderBy('publishTime', 'desc') // 时间从新到旧
     }
-    
+
     // 查询物品列表
     const result = await query
       .skip(skip)
       .limit(pageSize)
       .get()
-    
+
     // 获取总数（用于分页）
     const countResult = await db.collection('items')
       .where(whereCondition)
       .count()
-    
+
     return {
       success: true,
       data: {
@@ -87,7 +101,7 @@ exports.main = async (event, context) => {
       },
       message: '获取成功'
     }
-    
+
   } catch (error) {
     console.error('获取物品列表失败:', error)
     return {

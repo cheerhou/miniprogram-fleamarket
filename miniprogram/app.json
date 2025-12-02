@@ -8,7 +8,8 @@
     "pages/locks/locks",
     "pages/logs/logs",
     "pages/category/category",
-    "pages/notifications/notifications"
+    "pages/notifications/notifications",
+    "pages/register/register"
   ],
   "window": {
     "navigationBarTextStyle": "black",

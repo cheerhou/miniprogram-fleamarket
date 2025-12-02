@@ -1,7 +1,7 @@
 // 云开发工具类
 class CloudUtils {
   private static instance: CloudUtils
-  
+
   public static getInstance(): CloudUtils {
     if (!CloudUtils.instance) {
       CloudUtils.instance = new CloudUtils()
@@ -58,6 +58,7 @@ class CloudUtils {
     status?: string
     keyword?: string
     sortBy?: string
+    filter?: 'published' | 'locked' | 'bought'
   }): Promise<any> {
     return this.callFunction('getItems', params)
   }
@@ -110,6 +111,19 @@ class CloudUtils {
    */
   public async updateUserInfo(userData: any): Promise<any> {
     return this.callFunction('updateUserInfo', userData)
+  }
+
+  /**
+   * 注册用户
+   * @param userData 用户数据
+   */
+  public async registerUser(userData: {
+    name: string
+    community: string
+    address: string
+    avatar?: string
+  }): Promise<any> {
+    return this.callFunction('registerUser', userData)
   }
 
   /**

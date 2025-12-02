@@ -1,0 +1,31 @@
+.register-page {
+  padding: 180rpx 32rpx 48rpx;
+  background-color: #fff;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.register-header {
+  margin-bottom: 64rpx;
+  text-align: center;
+}
+
+.register-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.register-desc {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.register-form {
+  background-color: #fff;
+}
+
+.submit-btn {
+  margin-top: 64rpx;
+}

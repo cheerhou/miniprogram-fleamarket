@@ -1,3 +1,5 @@
+import cloudUtils from '../../utils/cloud'
+
 interface QuickStat {
   text: string
   value: string
@@ -72,19 +74,8 @@ Page({
         url: '/pages/notifications/notifications',
       },
     ],
-    lockingOrder: <LockingOrder>{
-      title: '戴森手持吸尘器',
-      statusLabel: '待支付',
-      statusTheme: 'warning',
-      remaining: '剩余锁定 04:37:12',
-      location: '北区 2 栋门厅',
-    },
-    publishedItem: <PublishedItem>{
-      title: '小米音箱 Pro',
-      statusLabel: '已锁定',
-      stats: ['想要 12', '浏览 132'],
-      focus: '买家王同学 · 等待支付',
-    },
+    lockingOrder: null as LockingOrder | null,
+    publishedItem: null as PublishedItem | null,
     paymentPanels: <PaymentPanel[]>[
       {
         title: '微信支付',
@@ -118,13 +109,132 @@ Page({
     ],
   },
 
+  onLoad() {
+    this.loadData()
+  },
+
+  onShow() {
+    // 每次显示页面都刷新数据
+    this.loadData()
+  },
+
+  async loadData() {
+    try {
+      // 1. 获取用户信息
+      const userInfoResult = await cloudUtils.getUserInfo()
+      if (userInfoResult.success) {
+        this.setData({
+          userInfo: {
+            name: userInfoResult.data.name || '微信用户',
+            community: userInfoResult.data.community || '未认证社区',
+            address: userInfoResult.data.address || '未填写地址',
+            avatar: userInfoResult.data.avatar || ''
+          }
+        })
+      }
+
+      // 2. 获取统计数据
+      // 我的发布
+      const publishedResult = await cloudUtils.getItems({ filter: 'published', pageSize: 1 })
+      const publishedCount = publishedResult.success ? publishedResult.data.total : 0
+
+      // 锁定中
+      const lockedResult = await cloudUtils.getItems({ filter: 'locked', pageSize: 1 })
+      const lockedCount = lockedResult.success ? lockedResult.data.total : 0
+
+      // 已购买
+      const boughtResult = await cloudUtils.getItems({ filter: 'bought', pageSize: 1 })
+      const boughtCount = boughtResult.success ? boughtResult.data.total : 0
+
+      // 通知中心（未读数）
+      const notificationResult = await cloudUtils.getUserNotifications({ isRead: 'false', pageSize: 1 })
+      const notificationCount = notificationResult.success ? notificationResult.data.total : 0
+
+      // 更新统计数据
+      this.setData({
+        'quickStats[0].value': String(publishedCount),
+        'quickStats[1].value': String(lockedCount),
+        'quickStats[2].value': String(boughtCount),
+        'quickStats[3].value': String(notificationCount)
+      })
+
+      // 3. 更新"进行中的锁定"卡片
+      if (lockedCount > 0 && lockedResult.data.list.length > 0) {
+        const latestLock = lockedResult.data.list[0]
+        // 计算剩余时间（假设锁定12小时）
+        // 这里简化处理，实际应该根据 lockTime 计算
+        const lockTime = new Date(latestLock.lockInfo?.lockTime || Date.now())
+        const expireTime = new Date(lockTime.getTime() + 12 * 60 * 60 * 1000)
+        const now = new Date()
+        const diff = expireTime.getTime() - now.getTime()
+        let remaining = '已过期'
+
+        if (diff > 0) {
+          const hours = Math.floor(diff / (1000 * 60 * 60))
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+          remaining = `剩余锁定 ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+        }
+
+        this.setData({
+          lockingOrder: {
+            title: latestLock.title,
+            statusLabel: '待支付', // 简化逻辑
+            statusTheme: 'warning',
+            remaining,
+            location: latestLock.location || '未知地点'
+          }
+        })
+      } else {
+        // 如果没有锁定，清空或显示默认
+        this.setData({
+          lockingOrder: null
+        })
+      }
+
+      // 4. 更新"我的发布"卡片
+      if (publishedCount > 0 && publishedResult.data.list.length > 0) {
+        const latestPublish = publishedResult.data.list[0]
+        this.setData({
+          publishedItem: {
+            title: latestPublish.title,
+            statusLabel: latestPublish.status === 'available' ? '出售中' : (latestPublish.status === 'locked' ? '已锁定' : '已售出'),
+            stats: [`浏览 ${latestPublish.viewCount || 0}`, `想要 0`], // 想要数暂无字段
+            focus: latestPublish.status === 'locked' ? '已被买家锁定' : '暂无动态'
+          }
+        })
+      } else {
+        this.setData({
+          publishedItem: null
+        })
+      }
+
+    } catch (error) {
+      console.error('加载个人中心数据失败:', error)
+      wx.showToast({
+        title: '加载失败',
+        icon: 'none'
+      })
+    }
+  },
+
   onQuickLinkTap(event: WechatMiniprogram.TouchEvent) {
     const { url, text } = event.currentTarget.dataset as { url?: string; text: string }
     if (url) {
       wx.navigateTo({ url })
       return
     }
-    wx.showToast({ title: `${text}功能开发中`, icon: 'none' })
+    // 根据点击项跳转不同页面
+    if (text === '我的发布') {
+      // TODO: 跳转到我的发布列表
+      wx.showToast({ title: '我的发布列表开发中', icon: 'none' })
+    } else if (text === '锁定中') {
+      wx.navigateTo({ url: '/pages/locks/locks' })
+    } else if (text === '已购买') {
+      // TODO: 跳转到已购买列表
+      wx.showToast({ title: '已购买列表开发中', icon: 'none' })
+    } else {
+      wx.showToast({ title: `${text}功能开发中`, icon: 'none' })
+    }
   },
 
   onEditProfile() {

@@ -48,7 +48,7 @@
         <view class="section-name">进行中的锁定</view>
         <t-tag size="small" variant="light" theme="primary">全部</t-tag>
       </view>
-      <view class="content-card">
+      <view class="content-card" wx:if="{{lockingOrder}}">
         <view class="card-title-wrap">
           <view class="card-title">{{lockingOrder.title}}</view>
           <t-tag theme="{{lockingOrder.statusTheme}}" size="small" variant="light">
@@ -80,6 +80,7 @@
           >取消</t-button>
         </view>
       </view>
+      <t-empty wx:else icon="info-circle" description="暂无进行中的锁定" />
     </view>
 
     <view class="section-card">
@@ -87,7 +88,7 @@
         <view class="section-name">我的发布</view>
         <t-tag size="small" variant="light" theme="primary">管理</t-tag>
       </view>
-      <view class="content-card">
+      <view class="content-card" wx:if="{{publishedItem}}">
         <view class="publish-row">
           <view class="publish-thumb">
             <t-icon name="sound" size="36"></t-icon>
@@ -119,6 +120,7 @@
           >立即成交</t-button>
         </view>
       </view>
+      <t-empty wx:else icon="info-circle" description="暂无发布记录" />
     </view>
 
     <view class="section-card">

@@ -1,0 +1,50 @@
+<view class="register-page">
+  <view class="register-header">
+    <view class="register-title">欢迎加入社区</view>
+    <view class="register-desc">请完善您的个人信息以开始使用</view>
+  </view>
+
+  <view class="register-form">
+    <t-input
+      label="姓名"
+      placeholder="请输入您的真实姓名"
+      value="{{name}}"
+      bind:change="onNameInput"
+    />
+    
+    <t-cell
+      title="所属社区"
+      note="{{communityText || '请选择社区'}}"
+      arrow
+      bind:click="onCommunityPicker"
+    />
+
+    <t-input
+      label="详细地址"
+      placeholder="例如：3 栋 2 单元 1001"
+      value="{{address}}"
+      bind:change="onAddressInput"
+    />
+
+    <view class="submit-btn">
+      <t-button
+        theme="primary"
+        size="large"
+        block
+        bind:tap="onSubmit"
+      >立即注册</t-button>
+    </view>
+  </view>
+
+  <t-picker
+    visible="{{showCommunityPicker}}"
+    title="选择社区"
+    cancelBtn="取消"
+    confirmBtn="确认"
+    bindchange="onCommunityChange"
+    bindconfirm="onCommunityConfirm"
+    bindcancel="onCommunityCancel"
+  >
+    <t-picker-item options="{{communities}}" />
+  </t-picker>
+</view>
