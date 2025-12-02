@@ -5,7 +5,12 @@
   <view class="category-info" wx:if="{{categoryName}}">
     <view class="category-header">
       <view class="category-icon">
-        <t-icon name="home" size="24px" color="#757d89ff" />
+        <image 
+          src="{{categoryIcon}}" 
+          class="category-icon-img"
+          mode="aspectFit"
+          style="width: 24px; height: 24px;"
+        />
       </view>
       <view class="category-details">
         <text class="category-name">{{categoryName}}</text>

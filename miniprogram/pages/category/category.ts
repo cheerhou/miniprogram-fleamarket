@@ -39,6 +39,8 @@ Page({
     statusBarHeight: 0,
     // 分类名称
     categoryName: '',
+    // 分类图标
+    categoryIcon: '',
     // 分类信息
     categoryInfo: null as CategoryItem | null,
     // 物品列表
@@ -68,7 +70,8 @@ Page({
     if (categoryName) {
       const decodedName = decodeURIComponent(categoryName)
       this.setData({
-        categoryName: decodedName
+        categoryName: decodedName,
+        categoryIcon: this.getCategoryIcon(decodedName)
       })
       // 设置页面标题
       wx.setNavigationBarTitle({
@@ -85,6 +88,19 @@ Page({
         wx.navigateBack()
       }, 1500)
     }
+  },
+
+  // 获取分类图标
+  getCategoryIcon(categoryName: string): string {
+    const iconMap: { [key: string]: string } = {
+      '童趣': '/resources/icon/tongqu.svg',
+      '数码': '/resources/icon/shumaxiangji.svg',
+      '家居': '/resources/icon/jiaju.svg',
+      '运动': '/resources/icon/yundong.svg',
+      '图书': '/resources/icon/tushu.svg',
+      '其他': '/resources/icon/qita.svg'
+    }
+    return iconMap[categoryName] || '/resources/icon/tongqu.svg'
   },
 
   onShow() {
