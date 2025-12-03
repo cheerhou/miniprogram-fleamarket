@@ -101,7 +101,7 @@
         </view>
         <view class="seller-details">
           <text class="seller-name">{{item.sellerName}}</text>
-          <text class="seller-desc">信用良好 · 已认证</text>
+          <text class="seller-desc">信用良好</text>
         </view>
       </view>
     </view>

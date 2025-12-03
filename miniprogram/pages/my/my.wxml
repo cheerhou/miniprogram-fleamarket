@@ -11,7 +11,7 @@
             <view class="profile-name">{{userInfo.name}}</view>
             <view class="profile-location">{{userInfo.community}}</view>
             <view class="profile-meta">{{userInfo.address}}</view>
-            <t-tag theme="success" variant="light" size="small">已认证住户</t-tag>
+
           </view>
         </view>
         <t-button

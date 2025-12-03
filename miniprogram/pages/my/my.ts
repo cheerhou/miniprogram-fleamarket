@@ -41,7 +41,7 @@ Page({
     userInfo: {
       name: '徐小米',
       community: '远大中央公园 1 期',
-      address: '3 栋 · 已物业认证',
+      address: '3 栋',
       avatar: '',
     },
     quickStats: <QuickStat[]>[

@@ -6,7 +6,7 @@
       <view class="location-info">
         <t-icon name="location" size="20px" color="#fff" />
         <text class="location-text">{{community}}</text>
-        <t-tag theme="primary" variant="light" size="small">已认证</t-tag>
+
       </view>
       <view class="navbar-actions">
         <t-icon name="notification" size="20px" color="#fff" bind:tap="onNotification" />
