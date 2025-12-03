@@ -4,28 +4,58 @@ Page({
     data: {
         name: '',
         community: '',
-        address: '',
+        // address: '', // Removed simple address
+        room: '', // Added room
         avatar: '',
         communities: [
-            { label: '碧桂园 · 逸翠湾', value: '碧桂园 · 逸翠湾' },
-            { label: '万科 · 金域华府', value: '万科 · 金域华府' },
-            { label: '保利 · 天悦', value: '保利 · 天悦' },
-            { label: '中海 · 寰宇天下', value: '中海 · 寰宇天下' }
+            { label: '远大中央公园 1 期', value: '远大中央公园 1 期' },
+            { label: '远大中央公园 2 期', value: '远大中央公园 2 期' },
+            { label: '远大中央公园 3 期', value: '远大中央公园 3 期' },
+            { label: '远大中央公园 4 期', value: '远大中央公园 4 期' }
         ],
         showCommunityPicker: false,
         communityText: '',
+
+        // Address Picker Data
+        showAddressPicker: false,
+        addressText: '',
+        addressValue: [],
+        addressOptions: [] as any[],
     },
 
     onLoad() {
         wx.hideHomeButton() // 隐藏返回首页按钮，强制注册
+        this.initAddressOptions()
+    },
+
+    initAddressOptions() {
+        // Generate Buildings: 1-30 栋
+        const buildings = Array.from({ length: 30 }, (_, i) => ({
+            label: `${i + 1} 栋`,
+            value: `${i + 1} 栋`
+        }))
+
+        // Generate Units: 1-3单元
+        const units = Array.from({ length: 3 }, (_, i) => ({
+            label: `${i + 1} 单元`,
+            value: `${i + 1} 单元`
+        }))
+
+        this.setData({
+            addressOptions: [buildings, units]
+        })
     },
 
     onNameInput(e: any) {
         this.setData({ name: e.detail.value })
     },
 
-    onAddressInput(e: any) {
-        this.setData({ address: e.detail.value })
+    // onAddressInput(e: any) {
+    //     this.setData({ address: e.detail.value })
+    // },
+
+    onRoomInput(e: any) {
+        this.setData({ room: e.detail.value })
     },
 
     onCommunityPicker() {
@@ -53,10 +83,32 @@ Page({
         this.setData({ showCommunityPicker: false })
     },
 
-    async onSubmit() {
-        const { name, community, address } = this.data
+    // Address Picker Handlers
+    onAddressPicker() {
+        this.setData({ showAddressPicker: true })
+    },
 
-        if (!name || !community || !address) {
+    onAddressChange(e: any) {
+        // Column change logic if needed (e.g. cascading), currently independent
+    },
+
+    onAddressConfirm(e: any) {
+        const { value, label } = e.detail
+        this.setData({
+            addressText: `${label[0]} ${label[1]}`,
+            addressValue: value,
+            showAddressPicker: false
+        })
+    },
+
+    onAddressCancel() {
+        this.setData({ showAddressPicker: false })
+    },
+
+    async onSubmit() {
+        const { name, community, addressValue, room } = this.data
+
+        if (!name || !community || !addressValue || addressValue.length < 2) {
             wx.showToast({
                 title: '请填写完整信息',
                 icon: 'none'
@@ -64,13 +116,15 @@ Page({
             return
         }
 
+        const fullAddress = `${addressValue[0]} ${addressValue[1]} ${room ? room + '房' : ''}`.trim()
+
         try {
             wx.showLoading({ title: '注册中...' })
 
             const result = await cloudUtils.registerUser({
                 name,
                 community,
-                address
+                address: fullAddress
             })
 
             if (result.success) {
@@ -88,10 +142,10 @@ Page({
             } else {
                 throw new Error(result.message)
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('注册失败:', error)
             wx.showToast({
-                title: '注册失败，请重试',
+                title: error.message || '注册失败，请重试',
                 icon: 'none'
             })
         } finally {

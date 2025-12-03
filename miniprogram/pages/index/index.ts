@@ -6,7 +6,7 @@ Page({
     // 状态栏高度
     statusBarHeight: 0,
     // 社区信息
-    community: '碧桂园 · 逸翠湾',
+    community: '远大中央公园 1 期',
     // 搜索关键词
     searchKeyword: '',
     // 分类列表
@@ -85,13 +85,13 @@ Page({
       wx.showLoading({
         title: '加载中...'
       })
-      
+
       // 从云数据库获取物品列表
       const result = await cloudUtils.getItems({
         page: 1,
         pageSize: 20
       })
-      
+
       if (result.success) {
         // 确保数据格式正确，过滤掉无效的图标
         const items = (result.data.list || []).map((item: any) => ({
@@ -107,7 +107,7 @@ Page({
       } else {
         throw new Error(result.message)
       }
-      
+
     } catch (error) {
       console.error('加载数据失败:', error)
       wx.showToast({
@@ -143,22 +143,22 @@ Page({
   validateIcon(iconName: string): string {
     // 有效的 TDesign 图标列表
     const validIcons = [
-      'time', 'check-circle', 'chat', 'browse', 'location', 
-      'notification', 'search', 'close', 'home', 'user', 
-      'view-list', 'chart', 'heart', 'mail', 'lightbulb', 
+      'time', 'check-circle', 'chat', 'browse', 'location',
+      'notification', 'search', 'close', 'home', 'user',
+      'view-list', 'chart', 'heart', 'mail', 'lightbulb',
       'error-circle', 'shop', 'edit', 'mobile', 'gift'
     ]
-    
+
     // 如果是有效的图标名称，直接返回
     if (validIcons.includes(iconName)) {
       return iconName
     }
-    
+
     // 如果是图片路径（包含 / 或 .），验证路径是否存在
     if (iconName && (iconName.includes('/') || iconName.includes('.'))) {
       return iconName
     }
-    
+
     // 默认返回 time 图标
     return 'time'
   },
@@ -170,14 +170,14 @@ Page({
       const result = await cloudUtils.getCategories({
         type: 'all'
       })
-      
+
       if (result.success && result.data && result.data.list) {
         // 验证分类图标路径
         const categories = result.data.list.map((category: any) => ({
           ...category,
           icon: this.validateCategoryIcon(category.icon, category.name)
         }))
-        
+
         this.setData({
           categories
         })
@@ -185,7 +185,7 @@ Page({
       } else {
         throw new Error(result.message || '分类数据格式错误')
       }
-      
+
     } catch (error) {
       console.error('加载分类失败:', error)
       // 如果加载失败，使用默认分类数据
@@ -215,12 +215,12 @@ Page({
       '图书': '/resources/icon/tushu.svg',
       '其他': '/resources/icon/qita.svg'
     }
-    
+
     // 如果图标路径存在且是有效的 SVG 路径，直接返回
     if (iconPath && iconPath.trim() && iconPath.includes('.svg')) {
       return iconPath
     }
-    
+
     // 否则根据分类名称返回默认图标
     return iconMap[categoryName] || '/resources/icon/tongqu.svg'
   },
@@ -230,7 +230,7 @@ Page({
     this.setData({
       searchKeyword: e.detail.value
     })
-    
+
     // 如果清空搜索框，自动加载完整列表
     if (!e.detail.value.trim()) {
       this.clearSearch()
@@ -242,7 +242,7 @@ Page({
     this.setData({
       searchKeyword: ''
     })
-    
+
     // 重新加载完整列表
     await this.loadData()
   },
@@ -250,7 +250,7 @@ Page({
   // 执行搜索 - 跳转到搜索页面
   onSearch() {
     const { searchKeyword } = this.data
-    
+
     if (searchKeyword.trim()) {
       // 如果有搜索关键词，传递到搜索页面
       wx.navigateTo({
@@ -289,7 +289,7 @@ Page({
   onCategoryTap(e: any) {
     const { name } = e.currentTarget.dataset
     console.log('点击分类:', name)
-    
+
     if (!name) {
       wx.showToast({
         title: '分类名称不存在',
@@ -297,12 +297,12 @@ Page({
       })
       return
     }
-    
+
     // 显示加载提示
     wx.showLoading({
       title: '加载中...'
     })
-    
+
     // 跳转到分类筛选页面，传递分类名称
     wx.navigateTo({
       url: `/pages/category/category?categoryName=${encodeURIComponent(name)}`,
@@ -324,7 +324,7 @@ Page({
   onItemTap(e: any) {
     const { id } = e.currentTarget.dataset
     console.log('点击物品:', id)
-    
+
     if (!id) {
       wx.showToast({
         title: '物品ID不存在',
@@ -332,7 +332,7 @@ Page({
       })
       return
     }
-    
+
     wx.navigateTo({
       url: `/pages/detail/detail?id=${id}`
     })
@@ -343,7 +343,7 @@ Page({
     const { id } = e.currentTarget.dataset
     console.log('onLockItem - 获取到的ID:', id)
     console.log('onLockItem - 完整dataset:', e.currentTarget.dataset)
-    
+
     if (!id) {
       wx.showToast({
         title: '物品ID不存在',
@@ -351,7 +351,7 @@ Page({
       })
       return
     }
-    
+
     wx.showModal({
       title: '确认锁定',
       content: '锁定后将为您保留 12 小时，请在锁定期内完成支付',
@@ -367,7 +367,7 @@ Page({
   // 执行锁定
   async lockItem(id: string) {
     console.log('准备锁定物品，ID:', id)
-    
+
     try {
       wx.showLoading({
         title: '锁定中...'
@@ -451,7 +451,7 @@ Page({
   // 底部导航切换
   onTabTap(e: any) {
     const { tab } = e.currentTarget.dataset
-    
+
     switch (tab) {
       case 'index':
         // 当前页面，不需要跳转

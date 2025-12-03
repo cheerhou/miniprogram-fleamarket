@@ -40,7 +40,7 @@ Page({
   data: {
     userInfo: {
       name: '徐小米',
-      community: '碧桂园 · 逸翠湾',
+      community: '远大中央公园 1 期',
       address: '3 栋 · 已物业认证',
       avatar: '',
     },
