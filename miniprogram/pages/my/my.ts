@@ -23,18 +23,7 @@ interface PublishedItem {
   focus: string
 }
 
-interface PaymentPanel {
-  title: string
-  meta: string
-  actionText: string
-  theme: 'brand' | 'default'
-}
 
-interface NotificationSetting {
-  title: string
-  description: string
-  value: boolean
-}
 
 Page({
   data: {
@@ -76,37 +65,7 @@ Page({
     ],
     lockingOrder: null as LockingOrder | null,
     publishedItem: null as PublishedItem | null,
-    paymentPanels: <PaymentPanel[]>[
-      {
-        title: '微信支付',
-        meta: '上月成交 ¥2,560',
-        actionText: '查看记录',
-        theme: 'brand',
-      },
-      {
-        title: '数据概览',
-        meta: '近 30 日浏览 320 次',
-        actionText: '数据明细',
-        theme: 'default',
-      },
-    ],
-    notificationSettings: <NotificationSetting[]>[
-      {
-        title: '锁定状态变更',
-        description: '锁定成功、释放将实时通知',
-        value: true,
-      },
-      {
-        title: '物品售出提醒',
-        description: '售出后推送成交与对账信息',
-        value: true,
-      },
-      {
-        title: '留言回复提醒',
-        description: '买家留言及回复即时可见',
-        value: false,
-      },
-    ],
+
   },
 
   onLoad() {
@@ -238,7 +197,9 @@ Page({
   },
 
   onEditProfile() {
-    wx.showToast({ title: '编辑资料暂未开放', icon: 'none' })
+    wx.navigateTo({
+      url: '/pages/profile-edit/profile-edit'
+    })
   },
 
   onContactSeller() {
@@ -261,14 +222,5 @@ Page({
     wx.showToast({ title: '确认成交', icon: 'none' })
   },
 
-  onPaymentPanelTap(event: WechatMiniprogram.TouchEvent) {
-    const { title } = event.currentTarget.dataset as { title: string }
-    wx.showToast({ title: `${title}功能开发中`, icon: 'none' })
-  },
 
-  onNotificationToggle(event: WechatMiniprogram.CustomEvent<{ value: boolean }>) {
-    const { index } = event.currentTarget.dataset as { index: number }
-    const { value } = event.detail
-    this.setData({ [`notificationSettings[${index}].value`]: value })
-  },
 })

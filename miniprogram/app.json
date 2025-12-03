@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/search/search",
     "pages/detail/detail",
+    "pages/profile-edit/profile-edit",
     "pages/publish/publish",
     "pages/my/my",
     "pages/locks/locks",
@@ -17,5 +18,8 @@
     "navigationBarBackgroundColor": "#ffffff"
   },
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {
+    "t-icon": "miniprogram_npm/tdesign-miniprogram/icon/icon"
+  }
 }

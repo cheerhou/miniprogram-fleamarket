@@ -1,0 +1,80 @@
+<view class="register-page">
+  <view class="register-header">
+    <view class="register-title">编辑个人资料</view>
+    <view class="register-desc">更新您的社区信息</view>
+  </view>
+
+  <view class="avatar-section" bindtap="onChooseAvatar">
+    <view class="avatar-wrapper">
+      <t-avatar size="large" image="{{avatar}}" icon="user" />
+      <view class="avatar-edit-icon">
+        <t-icon class="icon-camera-wrapper"name="camera" size="24px" color="#fff" />
+      </view>
+    </view>
+  </view>
+
+
+  <view class="register-form">
+    <t-input
+      label="姓名"
+      placeholder="请输入您的真实姓名"
+      value="{{name}}"
+      bind:change="onNameInput"
+    />
+    
+    <t-cell
+      title="所属社区"
+      note="{{communityText || '请选择社区'}}"
+      arrow
+      bind:click="onCommunityPicker"
+    />
+
+    <t-cell
+      title="楼栋单元"
+      note="{{addressText || '请选择楼栋单元'}}"
+      arrow
+      bind:click="onAddressPicker"
+    />
+
+    <t-input
+      label="房号"
+      placeholder="请输入房号 (选填)"
+      value="{{room}}"
+      bind:change="onRoomInput"
+    />
+
+    <view class="submit-btn">
+      <t-button
+        theme="primary"
+        size="large"
+        block
+        bind:tap="onSubmit"
+      >保存修改</t-button>
+    </view>
+  </view>
+
+  <t-picker
+    visible="{{showCommunityPicker}}"
+    title="选择社区"
+    cancelBtn="取消"
+    confirmBtn="确认"
+    bindchange="onCommunityChange"
+    bindconfirm="onCommunityConfirm"
+    bindcancel="onCommunityCancel"
+  >
+    <t-picker-item options="{{communities}}" />
+  </t-picker>
+
+  <t-picker
+    visible="{{showAddressPicker}}"
+    title="选择楼栋单元"
+    cancelBtn="取消"
+    confirmBtn="确认"
+    bindchange="onAddressChange"
+    bindconfirm="onAddressConfirm"
+    bindcancel="onAddressCancel"
+  >
+    <t-picker-item options="{{addressOptions[0]}}" />
+    <t-picker-item options="{{addressOptions[1]}}" />
+  </t-picker>
+</view>

@@ -45,7 +45,7 @@
 
     <view class="section-card">
       <view class="section-title">
-        <view class="section-name">进行中的锁定</view>
+        <view class="section-name">锁定的物品</view>
         <t-tag size="small" variant="light" theme="primary">全部</t-tag>
       </view>
       <view class="content-card" wx:if="{{lockingOrder}}">
@@ -123,49 +123,6 @@
       <t-empty wx:else icon="info-circle" description="暂无发布记录" />
     </view>
 
-    <view class="section-card">
-      <view class="section-title">
-        <view class="section-name">账单与数据</view>
-        <t-tag size="small" variant="light" theme="primary">对账</t-tag>
-      </view>
-      <view class="panel-grid">
-        <block wx:for="{{paymentPanels}}" wx:key="title">
-          <view
-            class="panel-card panel-card-{{item.theme}}"
-            data-title="{{item.title}}"
-            bindtap="onPaymentPanelTap"
-          >
-            <view class="panel-title">{{item.title}}</view>
-            <view class="panel-meta">{{item.meta}}</view>
-            <view class="panel-action">
-              {{item.actionText}}
-              <t-icon name="chevron-right"></t-icon>
-            </view>
-          </view>
-        </block>
-      </view>
-    </view>
 
-    <view class="section-card">
-      <view class="section-title">
-        <view class="section-name">消息提醒</view>
-        <t-tag size="small" variant="light-outline" theme="primary">订阅管理</t-tag>
-      </view>
-      <t-cell-group theme="card">
-        <block wx:for="{{notificationSettings}}" wx:key="title">
-          <t-cell
-            title="{{item.title}}"
-            description="{{item.description}}"
-          >
-            <t-switch
-              slot="rightIcon"
-              value="{{item.value}}"
-              data-index="{{index}}"
-              bindchange="onNotificationToggle"
-            ></t-switch>
-          </t-cell>
-        </block>
-      </t-cell-group>
-    </view>
   </scroll-view>
 </view>
