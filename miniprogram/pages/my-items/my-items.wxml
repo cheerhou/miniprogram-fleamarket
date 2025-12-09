@@ -1,0 +1,59 @@
+<view class="page">
+  <t-tabs value="{{activeTab}}" bind:change="onTabChange" theme="line">
+    <t-tab-panel label="出售中" value="0">
+      <scroll-view scroll-y class="item-list" wx:if="{{activeItems.length > 0}}">
+        <view class="item-card" wx:for="{{activeItems}}" wx:key="_id" bindtap="onViewDetail" data-id="{{item._id}}">
+          <image class="item-image" src="{{item.images[0]}}" mode="aspectFill" lazy-load />
+          
+          <view class="item-content">
+            <view class="item-header">
+              <view class="item-title">{{item.title}}</view>
+              <t-tag theme="{{item.statusTheme}}" size="small" variant="light">{{item.statusLabel}}</t-tag>
+            </view>
+            
+            <view class="item-price">¥{{item.price}}</view>
+            
+            <view class="item-meta">
+              <text>发布于 {{item.createTime}}</text>
+              <text>浏览 {{item.viewCount || 0}}</text>
+            </view>
+
+            <view class="item-actions" catchtap="true">
+              <t-button 
+                size="small" 
+                theme="primary" 
+                variant="outline" 
+                data-id="{{item._id}}" 
+                catchtap="onMarkSold"
+              >已售出</t-button>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <t-empty wx:else icon="info-circle" description="暂无出售中的物品" />
+    </t-tab-panel>
+
+    <t-tab-panel label="已售出" value="1">
+      <scroll-view scroll-y class="item-list" wx:if="{{soldItems.length > 0}}">
+        <view class="item-card" wx:for="{{soldItems}}" wx:key="_id" bindtap="onViewDetail" data-id="{{item._id}}">
+          <image class="item-image" src="{{item.images[0]}}" mode="aspectFill" lazy-load />
+          
+          <view class="item-content">
+            <view class="item-header">
+              <view class="item-title">{{item.title}}</view>
+              <t-tag theme="{{item.statusTheme}}" size="small" variant="light">{{item.statusLabel}}</t-tag>
+            </view>
+            
+            <view class="item-price">¥{{item.price}}</view>
+            
+            <view class="item-meta">
+              <text>发布于 {{item.createTime}}</text>
+              <text>浏览 {{item.viewCount || 0}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+      <t-empty wx:else icon="info-circle" description="暂无已售出的物品" />
+    </t-tab-panel>
+  </t-tabs>
+</view>

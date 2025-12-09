@@ -34,7 +34,7 @@ Page({
         value: '0',
         icon: 'app',
         color: 'brand',
-        url: '',
+        url: '/pages/my-items/my-items',
       },
       {
         text: '锁定中',
@@ -180,7 +180,7 @@ Page({
     // 根据点击项跳转不同页面
     if (text === '我的发布') {
       wx.navigateTo({
-        url: '/pages/category/category?filter=published&title=我的发布'
+        url: '/pages/my-items/my-items'
       })
     } else if (text === '锁定中') {
       wx.navigateTo({ url: '/pages/locks/locks' })

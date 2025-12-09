@@ -54,12 +54,14 @@ exports.main = async (event, context) => {
     // 用户相关筛选
     const wxContext = cloud.getWXContext()
     const openid = wxContext.OPENID
+    console.log('openid:', openid)
 
     if (event.filter === 'published') {
       whereCondition._openid = openid
     } else if (event.filter === 'locked') {
-      whereCondition.lockedBy = openid
-      whereCondition.status = 'locked'
+      whereCondition['lockInfo.lockedBy'] = openid
+      // 不限制 status，以便获取已完成或已取消的锁定记录
+      // whereCondition.status = 'locked'
     } else if (event.filter === 'bought') {
       whereCondition.buyerId = openid
       whereCondition.status = 'sold'

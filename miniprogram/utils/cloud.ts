@@ -103,6 +103,14 @@ class CloudUtils {
   }
 
   /**
+   * 标记物品已售出
+   * @param itemId 物品ID
+   */
+  public async markItemSold(itemId: string): Promise<any> {
+    return this.callFunction('markItemSold', { itemId })
+  }
+
+  /**
    * 取消锁定
    * @param itemId 物品ID
    * @param action 操作类型：release（释放）或 sell（售出）

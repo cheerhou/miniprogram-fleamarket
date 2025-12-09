@@ -10,7 +10,8 @@
     "pages/logs/logs",
     "pages/category/category",
     "pages/notifications/notifications",
-    "pages/register/register"
+    "pages/register/register",
+    "pages/my-items/my-items"
   ],
   "window": {
     "navigationBarTextStyle": "black",
