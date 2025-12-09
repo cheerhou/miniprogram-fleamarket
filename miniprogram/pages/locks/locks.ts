@@ -5,12 +5,10 @@ Page({
     activeTab: 0,
     tabs: [
       { label: '进行中', value: 0 },
-      { label: '已完成', value: 1 },
-      { label: '已取消', value: 2 }
+      { label: '已完成', value: 1 }
     ],
     activeLocks: [] as any[],
     completedLocks: [] as any[],
-    cancelledLocks: [] as any[],
     loading: false
   },
 
@@ -41,7 +39,6 @@ Page({
         // 前端分类
         const activeLocks: any[] = []
         const completedLocks: any[] = []
-        const cancelledLocks: any[] = []
 
         allLocks.forEach((item: any) => {
           // 格式化通用数据
@@ -66,24 +63,17 @@ Page({
               remainingTime
             })
           } else if (item.status === 'sold') {
-            // 假设 sold 状态且是当前用户锁定的，视为已完成（已购买）
-            // 实际逻辑可能需要判断 buyerId === currentUser.openid
+            // 已售出（已完成）
             completedLocks.push({
               ...formattedItem,
-              completeTime: this.formatDate(item.updateTime) // 假设更新时间为完成时间
+              completeTime: this.formatDate(item.updateTime)
             })
-          } else {
-            // 其他状态视为已取消（例如 available 但有锁定记录，或者 cancelled）
-            // 这里简化处理，如果 items 接口只返回当前锁定的，可能拿不到历史记录
-            // 如果需要历史记录，后端需要提供专门的 getMyLocks 接口
-            // 暂时只处理 activeLocks，其他放空或根据实际返回调整
           }
         })
 
         this.setData({
           activeLocks,
-          completedLocks,
-          cancelledLocks
+          completedLocks
         })
       }
     } catch (error) {
@@ -188,7 +178,7 @@ Page({
                 icon: 'success'
               })
               // 刷新列表
-              // this.loadLocks() // TODO: 实现加载列表功能
+              this.loadLocks()
             } else {
               throw new Error(result.message)
             }
