@@ -1,4 +1,5 @@
 import cloudUtils from '../../utils/cloud'
+import { COMMUNITIES } from '../../utils/constants'
 
 Page({
     data: {
@@ -7,12 +8,7 @@ Page({
         // address: '', // Removed simple address
         room: '', // Added room
         avatar: '',
-        communities: [
-            { label: '远大中央公园 1 期', value: '远大中央公园 1 期' },
-            { label: '远大中央公园 2 期', value: '远大中央公园 2 期' },
-            { label: '远大中央公园 3 期', value: '远大中央公园 3 期' },
-            { label: '远大中央公园 4 期', value: '远大中央公园 4 期' }
-        ],
+        communities: COMMUNITIES,
         showCommunityPicker: false,
         communityText: '',
 

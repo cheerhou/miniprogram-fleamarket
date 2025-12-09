@@ -29,14 +29,27 @@ class CloudUtils {
 
   /**
    * 上传图片到云存储
-   * @param files 文件数组
+   * @param files 文件路径数组
    * @param folder 存储文件夹
    */
-  public async uploadImages(files: any[], folder: string = 'items'): Promise<any> {
-    return this.callFunction('uploadImages', {
-      files,
-      folder
+  public async uploadImages(files: string[], folder: string = 'items'): Promise<string[]> {
+    const tasks = files.map(async (filePath) => {
+      const ext = filePath.split('.').pop() || 'jpg'
+      const cloudPath = `${folder}/${Date.now()}-${Math.random().toString(36).slice(-6)}.${ext}`
+
+      try {
+        const res = await wx.cloud.uploadFile({
+          cloudPath,
+          filePath
+        })
+        return res.fileID
+      } catch (error) {
+        console.error('上传图片失败:', error)
+        throw error
+      }
     })
+
+    return Promise.all(tasks)
   }
 
   /**

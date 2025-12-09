@@ -1,5 +1,6 @@
 // index.ts
 import cloudUtils from '../../utils/cloud'
+import { CATEGORIES } from '../../utils/constants'
 
 Page({
   data: {
@@ -10,59 +11,7 @@ Page({
     // 搜索关键词
     searchKeyword: '',
     // 分类列表
-    categories: [
-      { _id: '1', name: '童趣', icon: '/resources/icon/tongqu.svg' },
-      { _id: '2', name: '数码', icon: '/resources/icon/shumaxiangji.svg' },
-      { _id: '3', name: '家居', icon: '/resources/icon/jiaju.svg' },
-      { _id: '4', name: '运动', icon: '/resources/icon/yundong.svg' },
-      { _id: '5', name: '图书', icon: '/resources/icon/tushu.svg' },
-      { _id: '6', name: '其他', icon: '/resources/icon/qita.svg' }
-    ],
-    // 物品列表
-    items: [
-      {
-        id: 1,
-        title: '小米音箱 Pro',
-        imageText: '智能音箱',
-        description: '自提 · 北区 3 栋大厅 · 赠送配件',
-        price: 128,
-        views: 12,
-        status: 'available',
-        statusText: '9 成新',
-        statusTheme: 'success',
-        footerIcon: 'time',
-        footerText: '锁定余 5 小时',
-        footerColor: '#0052D9'
-      },
-      {
-        id: 2,
-        title: '美的空气炸锅',
-        imageText: '空气炸锅',
-        description: 'B 区 8 栋 1 单元 · 到期 18:00',
-        price: 198,
-        views: 5,
-        status: 'locked',
-        statusText: '已被锁定',
-        statusTheme: 'warning',
-        footerIcon: 'check-circle',
-        footerText: '等待买家支付',
-        footerColor: '#2BA471'
-      },
-      {
-        id: 3,
-        title: 'Ninebot 儿童滑板车',
-        imageText: '滑板车',
-        description: '成交 · 线下自提',
-        price: 299,
-        views: 0,
-        status: 'sold',
-        statusText: '已售出',
-        statusTheme: 'danger',
-        footerIcon: 'chat',
-        footerText: '4 条留言',
-        footerColor: '#0052D9'
-      }
-    ]
+    categories: CATEGORIES
   },
 
   onLoad() {
@@ -76,7 +25,6 @@ Page({
   onShow() {
     // 页面显示时刷新数据
     this.loadData()
-    this.loadCategories()
   },
 
   // 加载数据
@@ -161,68 +109,6 @@ Page({
 
     // 默认返回 time 图标
     return 'time'
-  },
-
-  // 加载分类数据
-  async loadCategories() {
-    try {
-      // 从云数据库获取分类列表
-      const result = await cloudUtils.getCategories({
-        type: 'all'
-      })
-
-      if (result.success && result.data && result.data.list) {
-        // 验证分类图标路径
-        const categories = result.data.list.map((category: any) => ({
-          ...category,
-          icon: this.validateCategoryIcon(category.icon, category.name)
-        }))
-
-        this.setData({
-          categories
-        })
-        console.log('分类数据加载成功:', categories)
-      } else {
-        throw new Error(result.message || '分类数据格式错误')
-      }
-
-    } catch (error) {
-      console.error('加载分类失败:', error)
-      // 如果加载失败，使用默认分类数据
-      console.log('使用默认分类数据')
-      const defaultCategories = [
-        { _id: '1', name: '童趣', icon: '/resources/icon/tongqu.svg' },
-        { _id: '2', name: '数码', icon: '/resources/icon/shumaxiangji.svg' },
-        { _id: '3', name: '家居', icon: '/resources/icon/jiaju.svg' },
-        { _id: '4', name: '运动', icon: '/resources/icon/yundong.svg' },
-        { _id: '5', name: '图书', icon: '/resources/icon/tushu.svg' },
-        { _id: '6', name: '其他', icon: '/resources/icon/qita.svg' }
-      ]
-      this.setData({
-        categories: defaultCategories
-      })
-    }
-  },
-
-  // 验证分类图标路径
-  validateCategoryIcon(iconPath: string, categoryName: string): string {
-    // 根据分类名称返回对应的默认图标
-    const iconMap: { [key: string]: string } = {
-      '童趣': '/resources/icon/tongqu.svg',
-      '数码': '/resources/icon/shumaxiangji.svg',
-      '家居': '/resources/icon/jiaju.svg',
-      '运动': '/resources/icon/yundong.svg',
-      '图书': '/resources/icon/tushu.svg',
-      '其他': '/resources/icon/qita.svg'
-    }
-
-    // 如果图标路径存在且是有效的 SVG 路径，直接返回
-    if (iconPath && iconPath.trim() && iconPath.includes('.svg')) {
-      return iconPath
-    }
-
-    // 否则根据分类名称返回默认图标
-    return iconMap[categoryName] || '/resources/icon/tongqu.svg'
   },
 
   // 搜索输入

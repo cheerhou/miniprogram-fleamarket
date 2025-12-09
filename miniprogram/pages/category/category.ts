@@ -1,5 +1,6 @@
 // category.ts
 import cloudUtils from '../../utils/cloud'
+import { CATEGORIES } from '../../utils/constants'
 
 interface CategoryItem {
   _id: string
@@ -55,7 +56,9 @@ Page({
     showSortOptions: false,
     // 加载状态
     loading: false,
-    loadingMore: false
+    loadingMore: false,
+    // 筛选类型
+    filter: ''
   },
 
   onLoad(options: any) {
@@ -65,8 +68,9 @@ Page({
       statusBarHeight: systemInfo.statusBarHeight || 0
     })
 
-    // 获取分类名称
-    const { categoryName } = options
+    // 获取参数
+    const { categoryName, filter, title } = options
+
     if (categoryName) {
       const decodedName = decodeURIComponent(categoryName)
       this.setData({
@@ -77,11 +81,22 @@ Page({
       wx.setNavigationBarTitle({
         title: decodedName
       })
-      // 加载物品列表
+      this.loadItems()
+    } else if (filter) {
+      // 如果是筛选模式（我的发布、已购买等）
+      this.setData({
+        filter: filter
+      })
+      // 设置页面标题
+      if (title) {
+        wx.setNavigationBarTitle({
+          title: decodeURIComponent(title)
+        })
+      }
       this.loadItems()
     } else {
       wx.showToast({
-        title: '分类参数错误',
+        title: '参数错误',
         icon: 'none'
       })
       setTimeout(() => {
@@ -92,15 +107,8 @@ Page({
 
   // 获取分类图标
   getCategoryIcon(categoryName: string): string {
-    const iconMap: { [key: string]: string } = {
-      '童趣': '/resources/icon/tongqu.svg',
-      '数码': '/resources/icon/shumaxiangji.svg',
-      '家居': '/resources/icon/jiaju.svg',
-      '运动': '/resources/icon/yundong.svg',
-      '图书': '/resources/icon/tushu.svg',
-      '其他': '/resources/icon/qita.svg'
-    }
-    return iconMap[categoryName] || '/resources/icon/tongqu.svg'
+    const category = CATEGORIES.find(c => c.name === categoryName)
+    return category ? category.icon : 'ellipsis'
   },
 
   // 根据状态获取状态文本
@@ -182,6 +190,7 @@ Page({
         page: reset ? 1 : page,
         pageSize,
         category: categoryName, // 使用分类名称筛选
+        filter: this.data.filter as any, // 使用筛选类型
         sortBy
       })
 

@@ -1,5 +1,5 @@
-// miniprogram/pages/publish/publish.ts
 import cloudUtils from '../../utils/cloud'
+import { COMMUNITIES } from '../../utils/constants'
 
 Page({
   data: {
@@ -11,7 +11,7 @@ Page({
     category: '家居', // 存储分类名称
     location: '',
     images: [] as string[],
-    
+
     // 选项数据
     conditionOptions: [
       { label: '全新', value: '全新' },
@@ -28,24 +28,16 @@ Page({
       { label: '图书', value: '图书' },
       { label: '其他', value: '其他' }
     ],
-    locationOptions: [
-      { label: '北区 1 栋门厅', value: '北区 1 栋门厅' },
-      { label: '北区 2 栋门厅', value: '北区 2 栋门厅' },
-      { label: '北区 3 栋大厅', value: '北区 3 栋大厅' },
-      { label: '南区 5 栋大堂', value: '南区 5 栋大堂' },
-      { label: '东区 3 栋', value: '东区 3 栋' },
-      { label: '西区 1 栋', value: '西区 1 栋' },
-      { label: '其他（备注说明）', value: '其他' }
-    ],
-    
+    locationOptions: COMMUNITIES,
+
     // 上传配置
     maxImageCount: 9,
-    
+
     // Picker 显示控制
     showConditionPicker: false,
     showCategoryPicker: false,
     showLocationPicker: false,
-    
+
     // Picker 值
     conditionPickerValue: [1],
     categoryPickerValue: [0],
@@ -218,13 +210,13 @@ Page({
 
     try {
       const { title, description, price, condition, category, location, images } = this.data
-      
+
       // 1. 上传图片到云存储
       const uploadResult = await this.uploadImages(images)
       if (!uploadResult.success) {
         throw new Error(uploadResult.message)
       }
-      
+
       // 2. 创建物品记录
       const itemData = {
         title,
@@ -235,16 +227,16 @@ Page({
         location,
         images: uploadResult.data?.map((item: any) => item.fileID) || []
       }
-      
+
       console.log('准备创建物品记录:', itemData)
-      
+
       // 临时解决方案：直接使用数据库API
       try {
         const db = wx.cloud.database()
-        
+
         // 注意：小程序端无法直接创建集合，需要在控制台手动创建
         console.log('请确保在云开发控制台已创建 items 集合')
-        
+
         const result = await db.collection('items').add({
           data: {
             ...itemData,
@@ -263,10 +255,10 @@ Page({
         console.error('直接数据库操作失败:', dbError)
         throw new Error('数据库操作失败，请检查云开发权限')
       }
-      
+
       // 3. 清除草稿
       wx.removeStorageSync('publish_draft')
-      
+
       wx.hideLoading()
       wx.showToast({
         title: '发布成功',
@@ -277,7 +269,7 @@ Page({
       setTimeout(() => {
         wx.navigateBack()
       }, 2000)
-      
+
     } catch (error: any) {
       wx.hideLoading()
       wx.showToast({
@@ -291,19 +283,19 @@ Page({
   async uploadImages(tempFilePaths: string[]) {
     try {
       console.log('开始上传图片，数量:', tempFilePaths.length)
-      
+
       // 直接使用 wx.cloud.uploadFile 上传图片
       const uploadTasks = tempFilePaths.map(async (filePath, index) => {
         try {
           const fileName = `items/${Date.now()}_${index}_${Math.random().toString(36).substr(2, 9)}.jpg`
-          
+
           const uploadResult = await wx.cloud.uploadFile({
             cloudPath: fileName,
             filePath: filePath
           })
-          
+
           console.log('图片上传成功:', uploadResult.fileID)
-          
+
           return {
             fileID: uploadResult.fileID,
             tempFileURL: uploadResult.fileID,
@@ -314,24 +306,24 @@ Page({
           return null
         }
       })
-      
+
       const results = await Promise.all(uploadTasks)
       const successResults = results.filter(result => result !== null)
-      
+
       if (successResults.length === 0) {
         return {
           success: false,
           message: '所有图片上传失败'
         }
       }
-      
+
       console.log('成功上传图片数量:', successResults.length)
-      
+
       return {
         success: true,
         data: successResults
       }
-      
+
     } catch (error) {
       console.error('图片上传异常:', error)
       return {
@@ -344,7 +336,7 @@ Page({
   // 保存草稿
   onSaveDraft() {
     const { title, description, price, condition, category, location, images } = this.data
-    
+
     if (!title && !description && images.length === 0) {
       wx.showToast({
         title: '没有可保存的内容',
@@ -385,7 +377,7 @@ Page({
               const categoryIndex = this.data.categoryOptions.findIndex(
                 option => option.value === draft.category
               )
-              
+
               this.setData({
                 title: draft.title || '',
                 description: draft.description || '',

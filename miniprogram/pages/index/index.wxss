@@ -131,74 +131,7 @@ page {
   height: 40rpx;
 }
 
-/* 精选横幅 */
-.featured-banner {
-  background: linear-gradient(135deg, #0052D9 0%, #3385FF 100%);
-  border-radius: 48rpx;
-  padding: 40rpx;
-  margin-bottom: 48rpx;
-  box-shadow: 0 24rpx 64rpx rgba(0, 82, 217, 0.16);
-}
 
-.banner-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32rpx;
-}
-
-.banner-left {
-  flex: 1;
-}
-
-.banner-subtitle {
-  display: block;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
-  text-transform: uppercase;
-  letter-spacing: 2rpx;
-  margin-bottom: 8rpx;
-}
-
-.banner-title {
-  display: block;
-  color: #fff;
-  font-size: 48rpx;
-  font-weight: 600;
-  margin-bottom: 16rpx;
-}
-
-.banner-desc {
-  display: block;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 28rpx;
-  line-height: 1.6;
-}
-
-.banner-icon {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 32rpx;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10rpx);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.banner-tags {
-  display: flex;
-  gap: 16rpx;
-  flex-wrap: wrap;
-}
-
-.banner-tag {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 24rpx;
-  padding: 8rpx 24rpx;
-  border-radius: 24rpx;
-}
 
 /* 通用区块 */
 .section {
@@ -540,6 +473,10 @@ page {
   flex-direction: column;
   align-items: center;
   gap: 8rpx;
+  flex: 1;
+}
+
+.tabbar-spacer {
   flex: 1;
 }
 

@@ -18,8 +18,8 @@ Page({
         // Address Picker Data
         showAddressPicker: false,
         addressText: '',
-        addressValue: [],
-        addressOptions: [] as any[],
+        addressValue: [] as any[],
+        addressOptions: [] as any[]
     },
 
     onLoad() {
@@ -56,9 +56,30 @@ Page({
                 // Regex to extract parts
                 const addressMatch = address.match(/^(.+栋)\s+(.+单元)(?:\s+(.+房))?$/)
 
-                let addressValue = []
+                let addressValue: string[] = []
                 let addressText = ''
                 let room = ''
+
+                let avatarUrl = result.data.avatar || ''
+
+                // 如果是云存储ID，换取临时链接
+                if (avatarUrl.startsWith('cloud://')) {
+                    console.log('转换前 avatarUrl:', avatarUrl)
+                    try {
+                        const fileRes = await wx.cloud.getTempFileURL({
+                            fileList: [avatarUrl]
+                        })
+                        console.log('getTempFileURL result:', fileRes)
+                        if (fileRes.fileList && fileRes.fileList.length > 0) {
+                            avatarUrl = fileRes.fileList[0].tempFileURL
+                            console.log('转换后 avatarUrl:', avatarUrl)
+                        }
+                    } catch (err) {
+                        console.error('换取头像链接失败:', err)
+                    }
+                } else {
+                    console.log('非云存储ID avatarUrl:', avatarUrl)
+                }
 
                 if (addressMatch) {
                     addressValue = [addressMatch[1], addressMatch[2]]
@@ -76,7 +97,7 @@ Page({
                     addressText,
                     addressValue,
                     room,
-                    avatar: result.data.avatar || ''
+                    avatar: avatarUrl
                 })
             }
         } catch (error) {
@@ -96,16 +117,27 @@ Page({
             })
 
             const tempFilePath = res.tempFiles[0].tempFilePath
+            console.log('选择图片路径:', tempFilePath)
+
+            // 立即显示本地图片，提升体验
+            this.setData({
+                avatar: tempFilePath
+            })
 
             wx.showLoading({ title: '上传中...' })
 
             // Upload to cloud
             const uploadResult = await cloudUtils.uploadImages([tempFilePath], 'avatars')
+            console.log('上传结果:', uploadResult)
 
             if (uploadResult && uploadResult.length > 0) {
+                // 上传成功，保存 fileID 到 newAvatarId，但不更新显示的 avatar（保持本地路径显示）
                 this.setData({
-                    avatar: uploadResult[0]
+                    newAvatarId: uploadResult[0]
                 })
+            } else {
+                console.error('上传返回为空')
+                wx.showToast({ title: '上传失败', icon: 'none' })
             }
         } catch (error) {
             console.error('上传头像失败:', error)
@@ -156,7 +188,7 @@ Page({
         this.setData({ showAddressPicker: true })
     },
 
-    onAddressChange(e: any) {
+    onAddressChange() {
         // Column change logic if needed
     },
 
@@ -174,7 +206,7 @@ Page({
     },
 
     async onSubmit() {
-        const { name, community, addressValue, room } = this.data
+        const { name, community, addressValue, room, newAvatarId, avatar } = this.data
 
         if (!name || !community || !addressValue || addressValue.length < 2) {
             wx.showToast({
@@ -189,11 +221,14 @@ Page({
         try {
             wx.showLoading({ title: '保存中...' })
 
+            // 优先使用新上传的头像ID，否则使用原有头像
+            const avatarToSave = newAvatarId || avatar
+
             const result = await cloudUtils.updateUserInfo({
                 name,
                 community,
                 address: fullAddress,
-                avatar: this.data.avatar
+                avatar: avatarToSave
             })
 
             if (result.success) {

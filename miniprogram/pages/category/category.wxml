@@ -5,11 +5,10 @@
   <view class="category-info" wx:if="{{categoryName}}">
     <view class="category-header">
       <view class="category-icon">
-        <image 
-          src="{{categoryIcon}}" 
-          class="category-icon-img"
-          mode="aspectFit"
-          style="width: 24px; height: 24px;"
+        <t-icon 
+          name="{{categoryIcon}}" 
+          size="24px" 
+          color="#0052D9"
         />
       </view>
       <view class="category-details">
@@ -63,7 +62,7 @@
           <image 
             wx:if="{{item.images && item.images.length > 0}}"
             src="{{item.images[0]}}"
-            mode="aspectFill"
+            mode="aspectFit"
             class="item-image-img"
             lazy-load
           />

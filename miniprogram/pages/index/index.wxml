@@ -51,22 +51,27 @@
 
   <!-- 主内容区 -->
   <scroll-view class="main-content" scroll-y enhanced show-scrollbar="{{false}}">
-    <!-- 精选横幅 -->
-    <view class="featured-banner">
-      <view class="banner-content">
-        <view class="banner-left">
-          <text class="banner-subtitle">社区优选</text>
-          <text class="banner-title">今日精选好物</text>
-          <text class="banner-desc">关注喜欢的宝贝，锁定后即可预约交易</text>
-        </view>
-        <view class="banner-icon">
-          <t-icon name="heart" size="32px" color="#fff" />
-        </view>
+    <!-- 社区公告 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">社区公告</text>
+        <text class="section-date">2024-05-18</text>
       </view>
-      <view class="banner-tags">
-        <view class="banner-tag">本小区可见</view>
-        <view class="banner-tag">微信支付保障</view>
-        <view class="banner-tag">锁定最长 12 小时</view>
+      <view class="announcement-card">
+        <view class="announcement-item">
+          <t-icon name="error-circle" size="18px" color="#0052D9" />
+          <view class="announcement-content">
+            <text class="announcement-title">物业温馨提示</text>
+            <text class="announcement-desc">请文明交易，线下交付时佩戴门禁识别。</text>
+          </view>
+        </view>
+        <view class="announcement-item">
+          <t-icon name="time" size="18px" color="#0052D9" />
+          <view class="announcement-content">
+            <text class="announcement-title">锁定时长调整</text>
+            <text class="announcement-desc">6 月 1 日起默认锁定时长 12 小时。</text>
+          </view>
+        </view>
       </view>
     </view>
 
@@ -85,10 +90,10 @@
           data-name="{{item.name}}"
         >
           <view class="category-icon">
-            <image 
-              src="{{item.icon}}" 
-              class="category-icon-img"
-              mode="aspectFit"
+            <t-icon 
+              name="{{item.icon}}" 
+              size="32px" 
+              color="#0052D9"
             />
           </view>
           <text class="category-name">{{item.name}}</text>
@@ -209,38 +214,7 @@
             <text class="subscription-status">订阅中</text>
           </view>
         </view>
-        <view class="subscription-item">
-          <t-icon name="lightbulb" size="18px" color="#0052D9" />
-          <view class="subscription-content">
-            <text class="subscription-title">链家小家电专题</text>
-            <text class="subscription-desc">每周精选小家电限时优惠速递</text>
-          </view>
-          <text class="section-link" bind:tap="onEditSubscription">编辑</text>
-        </view>
-      </view>
-    </view>
 
-    <!-- 社区公告 -->
-    <view class="section">
-      <view class="section-header">
-        <text class="section-title">社区公告</text>
-        <text class="section-date">2024-05-18</text>
-      </view>
-      <view class="announcement-card">
-        <view class="announcement-item">
-          <t-icon name="error-circle" size="18px" color="#0052D9" />
-          <view class="announcement-content">
-            <text class="announcement-title">物业温馨提示</text>
-            <text class="announcement-desc">请文明交易，线下交付时佩戴门禁识别。</text>
-          </view>
-        </view>
-        <view class="announcement-item">
-          <t-icon name="time" size="18px" color="#0052D9" />
-          <view class="announcement-content">
-            <text class="announcement-title">锁定时长调整</text>
-            <text class="announcement-desc">6 月 1 日起默认锁定时长 12 小时。</text>
-          </view>
-        </view>
       </view>
     </view>
 
@@ -258,9 +232,12 @@
       <t-icon name="view-list" size="24px" color="#64748b" />
       <text class="tabbar-text">锁定</text>
     </view>
+    
+    <view class="tabbar-spacer"></view>
+
     <view class="tabbar-publish" bind:tap="onPublish">
       <view class="publish-btn">
-        <text class="add-icon">+</text>
+      <t-icon name="add" size="24px" color="#ebedf1ff" />
       </view>
       <text class="tabbar-text">发布</text>
     </view>

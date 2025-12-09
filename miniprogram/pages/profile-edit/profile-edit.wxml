@@ -6,9 +6,9 @@
 
   <view class="avatar-section" bindtap="onChooseAvatar">
     <view class="avatar-wrapper">
-      <t-avatar size="large" image="{{avatar}}" icon="user" />
-      <view class="avatar-edit-icon">
-        <t-icon class="icon-camera-wrapper"name="camera" size="24px" color="#fff" />
+      <t-avatar size="large" image="{{avatar}}" />
+      <view class="avatar-edit-icon" wx:if="{{!avatar}}">
+        <t-icon class="icon-camera-wrapper" name="camera" size="24px" color="#fff" />
       </view>
     </view>
   </view>

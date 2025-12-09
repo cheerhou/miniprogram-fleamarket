@@ -27,37 +27,32 @@ interface PublishedItem {
 
 Page({
   data: {
-    userInfo: {
-      name: '徐小米',
-      community: '远大中央公园 1 期',
-      address: '3 栋',
-      avatar: '',
-    },
+    userInfo: {},
     quickStats: <QuickStat[]>[
       {
         text: '我的发布',
-        value: '6',
+        value: '0',
         icon: 'app',
         color: 'brand',
         url: '',
       },
       {
         text: '锁定中',
-        value: '2',
+        value: '0',
         icon: 'lock-on',
         color: 'warning',
         url: '',
       },
       {
         text: '已购买',
-        value: '8',
+        value: '0',
         icon: 'cart',
         color: 'success',
         url: '',
       },
       {
         text: '通知中心',
-        value: '3',
+        value: '0',
         icon: 'notification',
         color: 'brand',
         url: '/pages/notifications/notifications',
@@ -184,13 +179,15 @@ Page({
     }
     // 根据点击项跳转不同页面
     if (text === '我的发布') {
-      // TODO: 跳转到我的发布列表
-      wx.showToast({ title: '我的发布列表开发中', icon: 'none' })
+      wx.navigateTo({
+        url: '/pages/category/category?filter=published&title=我的发布'
+      })
     } else if (text === '锁定中') {
       wx.navigateTo({ url: '/pages/locks/locks' })
     } else if (text === '已购买') {
-      // TODO: 跳转到已购买列表
-      wx.showToast({ title: '已购买列表开发中', icon: 'none' })
+      wx.navigateTo({
+        url: '/pages/category/category?filter=bought&title=已购买'
+      })
     } else {
       wx.showToast({ title: `${text}功能开发中`, icon: 'none' })
     }

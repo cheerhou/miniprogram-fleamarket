@@ -16,7 +16,7 @@
         <swiper-item wx:for="{{item.images}}" wx:key="*this">
           <image 
             src="{{item}}" 
-            mode="aspectFill"
+            mode="aspectFit"
             class="swiper-image"
             bind:tap="onPreviewImage"
           />
